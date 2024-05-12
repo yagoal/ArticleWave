@@ -11,7 +11,7 @@ import SwiftUI
 struct ArticleWaveApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ArticlesScreen()
         }
     }
 }

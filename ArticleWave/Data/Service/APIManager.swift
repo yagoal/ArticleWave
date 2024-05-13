@@ -11,7 +11,7 @@ import UIKit
 
 protocol APIManagerType {
     // MARK: - Article Fetching
-    func fetchArticles() -> AnyPublisher<[Article]?, Error>
+    func fetchArticles(_ country: String) -> AnyPublisher<[Article]?, Error>
 
     // MARK: - Image Fetching
     func fetchImage(from url: URL) -> AnyPublisher<UIImage?, Never>
@@ -26,14 +26,9 @@ final class APIManager: APIManagerType {
     private let baseURL = "https://newsapi.org/v2/top-headlines"
 
     // MARK: - Article Fetching
-    func fetchArticles() -> AnyPublisher<[Article]?, Error> {
+    func fetchArticles(_ country: String) -> AnyPublisher<[Article]?, Error> {
         var components = URLComponents(string: baseURL)
-
-        let queryItems = [
-            URLQueryItem(name: "country", value: "us"),
-            URLQueryItem(name: "apiKey", value: apiKey)
-        ]
-
+        let queryItems = [URLQueryItem(name: "country", value: country), URLQueryItem(name: "apiKey", value: apiKey)]
         components?.queryItems = queryItems
 
         guard let url = components?.url else {
@@ -44,19 +39,30 @@ final class APIManager: APIManagerType {
         request.httpMethod = "GET"
 
         return URLSession.shared.dataTaskPublisher(for: request)
-            .map(\.data)
-            .decode(type: ArticlesResponse.self, decoder: JSONDecoder())
-            .handleEvents(receiveOutput: { response in
-                if let totalResults = response.totalResults {
-                    print("Total results: \(totalResults)")
+            .tryMap { [weak self] element -> Data in
+                guard let httpResponse = element.response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+                    throw APIError.invalidResponse
                 }
-            })
-            .mapError { error in
-                error
+                self?.printPrettyJSON(data: element.data)
+                return element.data
             }
+            .decode(type: ArticlesResponse.self, decoder: JSONDecoder())
             .map(\.articles)
+            .map {
+                $0?.filter { $0.title != "[Removed]" }
+            }
             .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
+    }
+
+    private func printPrettyJSON(data: Data) {
+        if let jsonObject = try? JSONSerialization.jsonObject(with: data, options: []),
+           let prettyJsonData = try? JSONSerialization.data(withJSONObject: jsonObject, options: [.prettyPrinted]),
+           let prettyPrintedJson = String(data: prettyJsonData, encoding: .utf8) {
+            print(prettyPrintedJson)
+        } else {
+            print("Failed to read JSON data.")
+        }
     }
 
     // MARK: - Image Fetching

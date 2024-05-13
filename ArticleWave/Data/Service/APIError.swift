@@ -10,6 +10,7 @@ import Foundation
 enum APIError: Error, LocalizedError {
     case invalidURL
     case parametersMissing
+    case invalidResponse
     case unknownError(message: String)
     case invalidImageData
 
@@ -17,6 +18,7 @@ enum APIError: Error, LocalizedError {
         switch self {
         case .invalidURL: return "The URL provided was invalid."
         case .parametersMissing: return "Required parameters are missing from the request."
+        case .invalidResponse: return "Invalid Response"
         case .unknownError(let message): return message
         case .invalidImageData: return "Invalid Image Data"
         }

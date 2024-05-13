@@ -1,5 +1,5 @@
 //
-//  Article.swift
+//  ArticlesResponse.swift
 //  ArticleWave
 //
 //  Created by Yago Pereira on 11/5/24.

@@ -8,7 +8,7 @@
 import Combine
 import UIKit
 
-final class ArticlesViewModel {
+final class ArticlesListViewModel {
 
     // MARK: - Properties
     @Published private(set) var articles: [Article] = []
@@ -25,35 +25,35 @@ final class ArticlesViewModel {
     }
 
     // MARK: - Public Methods
-    func fetchArticles() {
+    func fetchArticles(_ country: String = "br") {
         isLoading = true
         errorMessage = nil
 
-        apiManager.fetchArticles()
+        apiManager.fetchArticles(country)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 guard let self = self else { return }
-                self.isLoading = false
+                isLoading = false
                 if case .failure(let error) = completion {
                     self.errorMessage = error.localizedDescription
                 }
             }, receiveValue: { [weak self] articles in
-                self?.articles = articles ?? []
-                self?.downloadImages(for: articles ?? [])
+                guard let self else { return }
+                self.articles = articles ?? []
+                downloadImages(for: articles ?? [])
             })
             .store(in: &cancellables)
     }
-    
+
     // MARK: - Private Methods
     private func downloadImages(for articles: [Article]) {
         articles.forEach { article in
             guard let imageUrlString = article.urlToImage, let url = URL(string: imageUrlString) else { return }
             fetchImage(url: url)
+                .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] image in
-                    guard let image = image else { return }
-                    DispatchQueue.main.async {
-                        self?.images[url] = image
-                    }
+                    guard let image else { return }
+                    self?.images[url] = image
                 })
                 .store(in: &cancellables)
         }

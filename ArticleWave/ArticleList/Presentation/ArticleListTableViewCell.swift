@@ -1,5 +1,5 @@
 //
-//  ArticleCollectionViewCell.swift
+//  ArticleListTableViewCell.swift
 //  ArticleWave
 //
 //  Created by Yago Pereira on 11/5/24.
@@ -7,15 +7,13 @@
 
 import UIKit
 
-final class ArticleTableViewCell: UITableViewCell {
+final class ArticleListTableViewCell: UITableViewCell {
     static let identifier = "ArticleTableViewCell"
 
     private var articleImage: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFill
+        let imageView = UIImageView.defaultImageView
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 40
-        imageView.image = UIImage(named: "imageNotFound")
         return imageView
     }()
 
@@ -30,13 +28,14 @@ final class ArticleTableViewCell: UITableViewCell {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 10, weight: .regular)
         label.textColor = .darkGray
+        label.numberOfLines = 0
         return label
     }()
 
     private var descriptionLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 12, weight: .light)
-        label.numberOfLines = 0
+        label.numberOfLines = 2
         return label
     }()
 
@@ -49,14 +48,28 @@ final class ArticleTableViewCell: UITableViewCell {
     }()
 
     private lazy var labelsStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [titleLabel, authorLabel, descriptionLabel])
+        let stackView = UIStackView(
+            arrangedSubviews: [
+                titleLabel,
+                descriptionLabel,
+                authorLabel
+            ]
+        )
+
         stackView.axis = .vertical
         stackView.spacing = 4
         return stackView
     }()
 
     private lazy var contentStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [articleImage, labelsStackView, chevronImageView])
+        let stackView = UIStackView(
+            arrangedSubviews: [
+                articleImage,
+                labelsStackView,
+                chevronImageView
+            ]
+        )
+
         stackView.axis = .horizontal
         stackView.alignment = .center
         stackView.spacing = 10

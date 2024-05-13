@@ -116,8 +116,8 @@ final class ArticlesListViewController: UIViewController {
 }
 
 extension ArticlesListViewController: ArticlesViewDelegate {
-    func didSelectCountry(_ country: String) {
-        viewModel.fetchArticles(country)
+    func didSelectCountry(_ country: String,_ isRefreshing: Bool) {
+        viewModel.fetchArticles(country, isRefreshing)
     }
 
     func didSelectArticle(_ article: Article, withImage imageView: UIImageView) {

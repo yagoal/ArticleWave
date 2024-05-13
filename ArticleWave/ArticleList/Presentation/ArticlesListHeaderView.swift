@@ -8,9 +8,18 @@
 import UIKit
 
 final class ArticlesHeaderView: UIView {
+    // MARK: - Properties
     private let didSelectCountry: (_ country: String) -> Void
     private var selectedButton: UIButton?
+    private let countries = [
+        ("🇧🇷", "br"),
+        ("🇵🇹", "pt"),
+        ("🇦🇷", "ar"),
+        ("🇺🇸", "us"),
+        ("🇬🇧", "gb"),
+    ]
 
+    // MARK: - Subviews
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.text = "Notícias"
@@ -29,26 +38,20 @@ final class ArticlesHeaderView: UIView {
         return stack
     }()
 
-    private let countries = [
-        ("🇧🇷", "br"),
-        ("🇵🇹", "pt"),
-        ("🇦🇷", "ar"),
-        ("🇺🇸", "us"),
-        ("🇬🇧", "gb"),
-    ]
-
+    // MARK: - Initialization
     init(didSelectCountry: @escaping (_ country: String) -> Void) {
         self.didSelectCountry = didSelectCountry
         super.init(frame: .zero)
         setupViews()
         setupConstraints()
-        setDefaultSelection()
+        setupDefaultSelection()
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
+    // MARK: - Setup Methods
     private func setupViews() {
         backgroundColor = .systemBackground
 
@@ -83,21 +86,23 @@ final class ArticlesHeaderView: UIView {
         ])
     }
 
-    private func setDefaultSelection() {
+    private func setupDefaultSelection() {
         if let firstButton = buttonStackView.arrangedSubviews.first as? UIButton {
             countryButtonPressed(firstButton)
         }
     }
 
+    // MARK: - Actions
     @objc private func countryButtonPressed(_ sender: UIButton) {
         if let selectedButton = selectedButton {
-            selectedButton.backgroundColor = .systemBlue.withAlphaComponent(0.8) // Reset the previous selected button
+            selectedButton.backgroundColor = .systemBlue.withAlphaComponent(0.8)
         }
 
-        selectedButton = sender // Set the new selected button
-        selectedButton?.backgroundColor = .systemGreen // Change color for selection
+        selectedButton = sender
+        selectedButton?.backgroundColor = .systemGreen
 
         guard let country = sender.accessibilityIdentifier else { return }
         didSelectCountry(country)
     }
 }
+

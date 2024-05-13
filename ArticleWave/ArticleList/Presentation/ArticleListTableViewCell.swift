@@ -10,21 +10,22 @@ import UIKit
 final class ArticleListTableViewCell: UITableViewCell {
     static let identifier = "ArticleTableViewCell"
 
-    private var articleImage: UIImageView = {
+    // MARK: - Subviews
+    private lazy var articleImage: UIImageView = {
         let imageView = UIImageView.defaultImageView
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 40
         return imageView
     }()
 
-    private var titleLabel: UILabel = {
+    private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 14, weight: .bold)
         label.numberOfLines = 0
         return label
     }()
 
-    private var authorLabel: UILabel = {
+    private lazy var authorLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 10, weight: .regular)
         label.textColor = .darkGray
@@ -32,14 +33,14 @@ final class ArticleListTableViewCell: UITableViewCell {
         return label
     }()
 
-    private var descriptionLabel: UILabel = {
+    private lazy var descriptionLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 12, weight: .light)
         label.numberOfLines = 2
         return label
     }()
 
-    private var chevronImageView: UIImageView = {
+    private lazy var chevronImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         imageView.image = UIImage(systemName: "chevron.right")
@@ -55,7 +56,6 @@ final class ArticleListTableViewCell: UITableViewCell {
                 authorLabel
             ]
         )
-
         stackView.axis = .vertical
         stackView.spacing = 4
         return stackView
@@ -69,16 +69,16 @@ final class ArticleListTableViewCell: UITableViewCell {
                 chevronImageView
             ]
         )
-
         stackView.axis = .horizontal
         stackView.alignment = .center
         stackView.spacing = 10
         return stackView
     }()
 
+    // MARK: - Init
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        contentView.addSubview(contentStackView)
+        setupViews()
         applyConstraints()
     }
 
@@ -86,11 +86,27 @@ final class ArticleListTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        articleImage.image = UIImage(named: "imageNotFound")
+    // MARK: - Configuration
+    func configure(with article: Article) {
+        titleLabel.text = article.title
+
+        if let author = article.author {
+            authorLabel.text = "Author: \(author)"
+        }
+
+        descriptionLabel.text = article.description
     }
 
+    func updateImage(with image: UIImage?) {
+        articleImage.image = image
+    }
+
+    // MARK: - View Setup
+    private func setupViews() {
+        contentView.addSubview(contentStackView)
+    }
+
+    // MARK: - Constraints
     private func applyConstraints() {
         setupContentStackViewConstraints()
         setupChevronImageViewConstraints()
@@ -128,17 +144,9 @@ final class ArticleListTableViewCell: UITableViewCell {
         ])
     }
 
-    func configure(with article: Article) {
-        titleLabel.text = article.title
-
-        if let author = article.author {
-            authorLabel.text = "Author: \(author)"
-        }
-
-        descriptionLabel.text = article.description
-    }
-
-    func updateImage(with image: UIImage?) {
-        articleImage.image = image
+    // MARK: - Lifecycle
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        articleImage.image = UIImage(named: "imageNotFound")
     }
 }

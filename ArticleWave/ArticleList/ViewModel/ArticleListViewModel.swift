@@ -17,7 +17,7 @@ final class ArticlesListViewModel {
     @Published private(set) var images: [URL: UIImage] = [:]
 
     private var cancellables: Set<AnyCancellable> = []
-    private var apiManager: APIManagerType
+    private let apiManager: APIManagerType
 
     // MARK: - Init
     init(apiManager: APIManagerType = APIManager.shared) {
@@ -25,8 +25,11 @@ final class ArticlesListViewModel {
     }
 
     // MARK: - Public Methods
-    func fetchArticles(_ country: String = "br") {
-        isLoading = true
+    func fetchArticles(_ country: String = "br", _ isRefreshing: Bool = false) {
+        if !isRefreshing {
+            isLoading = true
+        }
+
         errorMessage = nil
 
         apiManager.fetchArticles(country)

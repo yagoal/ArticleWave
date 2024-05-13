@@ -8,10 +8,12 @@
 import UIKit
 
 final class ArticleDetailsView: UIView {
+    // MARK: - Properties
     private let article: Article
     private let imageView: UIImageView
     private let onGoToSitePressed: (URL) -> Void
 
+    // MARK: - Subviews
     private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.showsVerticalScrollIndicator = false
@@ -49,7 +51,7 @@ final class ArticleDetailsView: UIView {
 
     private lazy var contentLabel: CustomLabel = {
         let label = CustomLabel()
-        label.numberOfLines = 5
+        label.numberOfLines = 0
         label.font = UIFont.preferredFont(forTextStyle: .body)
         label.text = article.content ?? "Artigo sem conteúdo"
         if article.content == nil {
@@ -80,6 +82,7 @@ final class ArticleDetailsView: UIView {
         return label
     }()
 
+    // MARK: - Init
     init(
         article: Article,
         imageView: UIImageView,
@@ -100,6 +103,7 @@ final class ArticleDetailsView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
+    // MARK: - Setup Methods
     private func setupViews() {
         backgroundColor = .systemBackground
         addSubview(scrollView)
@@ -135,6 +139,7 @@ final class ArticleDetailsView: UIView {
         ])
     }
 
+    // MARK: - Actions
     @objc private func goToSitePressed() {
         if let url = URL(string: article.url) {
             onGoToSitePressed(url)
@@ -142,8 +147,9 @@ final class ArticleDetailsView: UIView {
     }
 }
 
+// MARK: - Custom Label
 private final class CustomLabel: UILabel {
-    var contentInsets = UIEdgeInsets(top: 12, left: 12, bottom: 12, right: 12)
+    private let contentInsets = UIEdgeInsets(top: 12, left: 12, bottom: 12, right: 12)
 
     override func drawText(in rect: CGRect) {
         super.drawText(in: rect.inset(by: contentInsets))

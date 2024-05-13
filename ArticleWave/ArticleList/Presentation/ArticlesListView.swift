@@ -9,16 +9,22 @@ import UIKit
 
 protocol ArticlesViewDelegate: AnyObject {
     func didSelectArticle(_ article: Article, withImage imageView: UIImageView)
-    func didSelectCountry(_ country: String)
+    func didSelectCountry(_ country: String, _ isRefreshing: Bool)
 }
 
 final class ArticlesListView: UIView {
+    // MARK: - Delegate
     weak var delegate: ArticlesViewDelegate?
+    private var selectedCountry: String?
 
-    // MARK: - Properties
+    // MARK: - Subviews
     private lazy var headerView: ArticlesHeaderView = {
         let view = ArticlesHeaderView(
-            didSelectCountry: { [weak self] in self?.delegate?.didSelectCountry($0) }
+            didSelectCountry: { [weak self] in
+                guard let self else { return }
+                selectedCountry = $0
+                delegate?.didSelectCountry($0, false)
+            }
         )
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
@@ -33,6 +39,13 @@ final class ArticlesListView: UIView {
         return tableView
     }()
 
+    private lazy var refreshControl: UIRefreshControl = {
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(handleRefresh(_:)), for: .valueChanged)
+        return refreshControl
+    }()
+
+    // MARK: - Properties
     var articles: [Article] = [] {
         didSet {
             reloadData()
@@ -50,6 +63,7 @@ final class ArticlesListView: UIView {
         super.init(frame: frame)
         addSubview(headerView)
         addSubview(articlesTableView)
+        articlesTableView.refreshControl = refreshControl
         configureConstraint()
     }
 
@@ -57,6 +71,7 @@ final class ArticlesListView: UIView {
         super.init(coder: coder)
         addSubview(headerView)
         addSubview(articlesTableView)
+        articlesTableView.refreshControl = refreshControl
         configureConstraint()
     }
     
@@ -75,10 +90,16 @@ final class ArticlesListView: UIView {
         ])
     }
 
-
     // MARK: - Public Methods
     func reloadData() {
         articlesTableView.reloadData()
+        refreshControl.endRefreshing()
+    }
+
+    // MARK: - Actions
+    @objc private func handleRefresh(_ refreshControl: UIRefreshControl) {
+        guard let selectedCountry else { return }
+        delegate?.didSelectCountry(selectedCountry, true)
     }
 }
 

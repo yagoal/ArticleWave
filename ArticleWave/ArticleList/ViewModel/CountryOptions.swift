@@ -16,11 +16,11 @@ enum CountryOptions: String, CaseIterable {
     
     var emoji: String {
         switch self {
-        case .brazil: return "🇧🇷"
-        case .portugal: return "🇵🇹"
-        case .argentina: return "🇦🇷"
-        case .usa: return "🇺🇸"
-        case .uk: return "🇬🇧"
+        case .brazil: "🇧🇷"
+        case .portugal: "🇵🇹"
+        case .argentina: "🇦🇷"
+        case .usa: "🇺🇸"
+        case .uk: "🇬🇧"
         }
     }
 }

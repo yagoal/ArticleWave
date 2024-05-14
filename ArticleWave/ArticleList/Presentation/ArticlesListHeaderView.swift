@@ -92,13 +92,13 @@ final class ArticlesHeaderView: UIView {
     @objc private func countryButtonPressed(_ sender: UIButton) {
         if let selectedButton = selectedButton {
             selectedButton.backgroundColor = .systemBlue.withAlphaComponent(0.8)
-            selectedButton.layer.borderWidth = 1
+            selectedButton.layer.borderWidth = 0
             selectedButton.accessibilityValue = "deselected"
         }
 
         selectedButton = sender
         selectedButton?.backgroundColor = .systemGreen
-        selectedButton?.layer.borderWidth = 2
+        selectedButton?.layer.borderWidth = 3
         selectedButton?.layer.borderColor = UIColor.systemYellow.cgColor
         selectedButton?.accessibilityValue = "selected"
 

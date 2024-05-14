@@ -16,11 +16,11 @@ enum APIError: Error, LocalizedError {
 
     var errorDescription: String? {
         switch self {
-        case .invalidURL: return "The URL provided was invalid."
-        case .parametersMissing: return "Required parameters are missing from the request."
-        case .invalidResponse: return "Invalid Response"
-        case .unknownError(let message): return message
-        case .invalidImageData: return "Invalid Image Data"
+        case .invalidURL: "The URL provided was invalid."
+        case .parametersMissing: "Required parameters are missing from the request."
+        case .invalidResponse: "Invalid Response"
+        case .unknownError(let message): message
+        case .invalidImageData: "Invalid Image Data"
         }
     }
 }

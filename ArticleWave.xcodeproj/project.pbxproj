@@ -154,14 +154,6 @@
 			path = AppCore;
 			sourceTree = "<group>";
 		};
-		201A5AE42BF312AC0012F152 /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				201A5AE52BF312BA0012F152 /* CountryOptions.swift */,
-			);
-			path = Models;
-			sourceTree = "<group>";
-		};
 		2056D6882BEFCF9600F58581 = {
 			isa = PBXGroup;
 			children = (
@@ -236,7 +228,6 @@
 		2056D6C72BEFDFB600F58581 /* ArticleList */ = {
 			isa = PBXGroup;
 			children = (
-				201A5AE42BF312AC0012F152 /* Models */,
 				2056D6D72BEFF90B00F58581 /* ViewModel */,
 				2056D6D12BEFE26300F58581 /* Presentation */,
 			);
@@ -276,6 +267,7 @@
 			isa = PBXGroup;
 			children = (
 				2056D6D82BEFF91B00F58581 /* ArticleListViewModel.swift */,
+				201A5AE52BF312BA0012F152 /* CountryOptions.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";

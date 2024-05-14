@@ -118,7 +118,7 @@ final class ArticlesListViewController: UIViewController {
                 guard let self else { return }
                 if isLoading {
                     activityIndicator.startAnimating()
-                    blurEffectView.alpha = 0.9
+                    blurEffectView.alpha = 1
                 } else {
                     activityIndicator.stopAnimating()
                     blurEffectView.alpha = 0

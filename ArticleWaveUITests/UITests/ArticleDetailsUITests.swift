@@ -16,6 +16,11 @@ final class ArticleDetailsUITests: XCTestCase {
         app = XCUIApplication()
     }
 
+    override func tearDownWithError() throws {
+        app.terminate()
+        try super.tearDownWithError()
+    }
+
     func testNavigationToArticleDetails() {
         app.setLaunchArgument([.uiTest])
         app.launch()

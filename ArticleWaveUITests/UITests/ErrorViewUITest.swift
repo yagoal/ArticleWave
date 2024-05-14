@@ -16,6 +16,11 @@ final class ErrorViewUITest: XCTestCase {
         app = XCUIApplication()
     }
 
+    override func tearDownWithError() throws {
+        app.terminate()
+        try super.tearDownWithError()
+    }
+
     func testErrorViewAppearanceAndInteractions() {
         // Launch the app with a condition that triggers the error state
         app.setLaunchArgument([.uiTest, .useMockHttpRequestsWithError])

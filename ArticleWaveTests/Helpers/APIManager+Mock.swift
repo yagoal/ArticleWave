@@ -28,7 +28,7 @@ final class MockAPIManager: APIManagerType {
         .eraseToAnyPublisher()
     }
 
-    func fetchImage(from url: URL) -> AnyPublisher<UIImage?, Never> {
+    func downloadImage(from url: URL) -> AnyPublisher<UIImage?, Never> {
         let image = imageResponses[url] ?? UIImage(named: "defaultImage")
         return Just(image).eraseToAnyPublisher()
     }

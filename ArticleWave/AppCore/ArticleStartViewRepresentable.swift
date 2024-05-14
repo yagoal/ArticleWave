@@ -11,9 +11,9 @@ struct ArticleStartViewRepresentable: UIViewControllerRepresentable {
     typealias UIViewControllerType = UINavigationController
 
     func makeUIViewController(context: Context) -> UINavigationController {
-        let articlesViewController = ArticlesListViewController()
-        let navigationController = UINavigationController(rootViewController: articlesViewController)
-        
+        let navigationController = UINavigationController()
+        let coordinator = AppCoordinator(rootViewController: navigationController)
+        coordinator.start()
         return navigationController
     }
 

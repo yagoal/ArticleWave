@@ -104,10 +104,9 @@ extension APIManager {
 
         let isWithError = LaunchArgument.check(.useMockHttpRequestsWithError)
         let isWithDelay = LaunchArgument.check(.useMockHttpRequestWithDelay)
-        let delay = isWithDelay ? 3 : 0
+        let delay = isWithDelay ? 8 : 0
 
         return Just(data)
-            .delay(for: .seconds(delay), scheduler: DispatchQueue.main)
             .flatMap { data -> AnyPublisher<[Article]?, Error> in
                 if isWithError {
                     return Fail(error: APIError.invalidResponse).eraseToAnyPublisher()
@@ -118,6 +117,7 @@ extension APIManager {
                         .eraseToAnyPublisher()
                 }
             }
+            .delay(for: .seconds(delay), scheduler: DispatchQueue.main)
             .mapError { error -> APIError in
                 print(error.localizedDescription)
                 return APIError.invalidResponse

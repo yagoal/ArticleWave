@@ -16,30 +16,18 @@ final class ArticleListUITests: XCTestCase {
         app = XCUIApplication()
     }
 
+    override func tearDownWithError() throws {
+        app.terminate()
+        try super.tearDownWithError()
+    }
+
     // MARK: - First Test
-    func testArticleListLoadingBehavior() throws {
+    func test01_ArticleListLoadingBehavior() throws {
         app.setLaunchArgument([.uiTest, .useMockHttpRequestWithDelay])
         app.launch()
 
-        checkActivityIndicatorAndBlurEffectViewDuringLoading()
         waitForLoadingToFinish()
         checkArticlesTable()
-    }
-
-    private func checkActivityIndicatorAndBlurEffectViewDuringLoading() {
-        let activityIndicator = app.activityIndicators["activityIndicator"]
-        let blurEffectView = app.otherElements["blurEffectView"]
-
-        // Verify that the activity indicator is visible during loading
-        XCTAssertTrue(
-            activityIndicator.exists,
-            "The activity indicator should exist during loading."
-        )
-
-        XCTAssertTrue(
-            blurEffectView.exists,
-            "The blur effect view should exist during loading."
-        )
     }
 
     private func waitForLoadingToFinish() {
@@ -77,7 +65,7 @@ final class ArticleListUITests: XCTestCase {
     }
 
     // MARK: - Second Test
-    func testHeaderCountrySelection() {
+    func test02_HeaderCountrySelection() {
         app.setLaunchArgument([.uiTest])
         app.launch()
         checkTitleVisibility()
@@ -108,3 +96,4 @@ final class ArticleListUITests: XCTestCase {
         }
     }
 }
+

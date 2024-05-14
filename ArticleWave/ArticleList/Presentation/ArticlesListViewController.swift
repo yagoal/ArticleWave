@@ -15,6 +15,8 @@ final class ArticlesListViewController: UIViewController {
     private let viewModel = ArticlesListViewModel()
     private var cancellables: Set<AnyCancellable> = []
 
+    var coordinator: AppCoordinator?
+
     // MARK: - Subviews
     private let activityIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView(style: .large)
@@ -123,7 +125,7 @@ final class ArticlesListViewController: UIViewController {
                 }
             }
             .store(in: &cancellables)
-        
+
         viewModel.$hasError
             .receive(on: DispatchQueue.main)
             .sink { [weak self] hasError in
@@ -153,11 +155,6 @@ extension ArticlesListViewController: ArticlesViewDelegate {
     }
 
     func didSelectArticle(_ article: Article, withImage imageView: UIImageView) {
-        let detailViewController = ArticleDetailsViewController(
-            article: article,
-            imageView: imageView
-        )
-
-        navigationController?.pushViewController(detailViewController, animated: true)
+        coordinator?.triggerDetails(for: article, with: imageView)
     }
 }

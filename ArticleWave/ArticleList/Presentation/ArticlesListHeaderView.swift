@@ -7,17 +7,12 @@
 
 import UIKit
 
+import UIKit
+
 final class ArticlesHeaderView: UIView {
     // MARK: - Properties
     private let didSelectCountry: (_ country: String) -> Void
     private var selectedButton: UIButton?
-    private let countries = [
-        ("🇧🇷", "br"),
-        ("🇵🇹", "pt"),
-        ("🇦🇷", "ar"),
-        ("🇺🇸", "us"),
-        ("🇬🇧", "gb"),
-    ]
 
     // MARK: - Subviews
     private let titleLabel: UILabel = {
@@ -59,18 +54,17 @@ final class ArticlesHeaderView: UIView {
         addSubview(titleLabel)
         addSubview(buttonStackView)
 
-        for (emoji, code) in countries {
+        for country in CountryOptions.allCases {
             let button = UIButton(type: .system)
             button.titleLabel?.font = UIFont.systemFont(ofSize: 30)
-            button.setTitle(emoji, for: .normal)
-            button.accessibilityIdentifier = "countryButton_\(code)"
+            button.setTitle(country.emoji, for: .normal)
+            button.accessibilityIdentifier = "countryButton_\(country.rawValue)"
             button.addTarget(self, action: #selector(countryButtonPressed(_:)), for: .touchUpInside)
             button.layer.cornerRadius = 20
             button.layer.masksToBounds = true
             button.backgroundColor = .systemBlue.withAlphaComponent(0.8)
             buttonStackView.addArrangedSubview(button)
         }
-
     }
 
     private func setupConstraints() {
@@ -97,25 +91,25 @@ final class ArticlesHeaderView: UIView {
     // MARK: - Actions
     @objc private func countryButtonPressed(_ sender: UIButton) {
         if let selectedButton = selectedButton {
-            deselectButton(selectedButton)
+            selectedButton.backgroundColor = .systemBlue.withAlphaComponent(0.8)
+            selectedButton.layer.borderWidth = 1
+            selectedButton.accessibilityValue = "deselected"
         }
+
         selectedButton = sender
-        selectButton(selectedButton)
+        selectedButton?.backgroundColor = .systemGreen
+        selectedButton?.layer.borderWidth = 2
+        selectedButton?.layer.borderColor = UIColor.systemYellow.cgColor
+        selectedButton?.accessibilityValue = "selected"
 
-        guard let country = sender.accessibilityIdentifier?.components(separatedBy: "_").last else { return }
+        guard let country = sender
+            .accessibilityIdentifier?
+            .components(separatedBy: "_")
+            .last
+        else {
+            return
+        }
+
         didSelectCountry(country)
-    }
-
-    private func selectButton(_ button: UIButton?) {
-        button?.backgroundColor = .systemGreen
-        button?.layer.borderWidth = 2
-        button?.layer.borderColor = UIColor.systemOrange.cgColor
-        button?.accessibilityValue = "selected"
-    }
-
-    private func deselectButton(_ button: UIButton?) {
-        button?.backgroundColor = .systemBlue.withAlphaComponent(0.8)
-        button?.layer.borderWidth = 0
-        button?.accessibilityValue = "deselected"
     }
 }

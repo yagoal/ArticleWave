@@ -12,13 +12,16 @@ final class ArticleDetailsViewController: UIViewController {
     private let article: Article
     private let imageView: UIImageView
 
+    var coordinator: AppCoordinator?
+
     // MARK: - Lifecycle
     override func loadView() {
         view = ArticleDetailsView(
             article: article,
             imageView: imageView,
             onGoToSitePressed: { [weak self] url in
-                self?.onGoToSiteAction(url)
+                guard let self else { return }
+                coordinator?.triggerOpenURL(for: url)
             }
         )
     }
@@ -32,10 +35,5 @@ final class ArticleDetailsViewController: UIViewController {
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    } 
-
-    // MARK: - Actions
-    private func onGoToSiteAction(_ url: URL) {
-        UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
 }

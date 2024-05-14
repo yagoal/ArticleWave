@@ -9,7 +9,7 @@ import Foundation
 
 enum LaunchArgument: String {
     /// flag indicates that is running on UI tests
-    case uiTest = "--ui-testing"
+    case uiTest = "--uitesting"
 
     /// flag for add delay because show loading and blur
     case useMockHttpRequestWithDelay = "--mock-api-requests-with-delay"

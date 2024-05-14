@@ -32,6 +32,7 @@ final class ArticlesListView: UIView {
 
     private lazy var articlesTableView: UITableView = {
         let tableView = UITableView()
+        tableView.accessibilityIdentifier = "articlesTableView"
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(ArticleListTableViewCell.self, forCellReuseIdentifier: ArticleListTableViewCell.identifier)
         tableView.delegate = self

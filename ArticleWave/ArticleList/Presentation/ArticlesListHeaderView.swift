@@ -25,6 +25,7 @@ final class ArticlesHeaderView: UIView {
         label.text = "Notícias"
         label.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         label.textAlignment = .center
+        label.accessibilityIdentifier = "newsTitleIdentifier"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -62,13 +63,14 @@ final class ArticlesHeaderView: UIView {
             let button = UIButton(type: .system)
             button.titleLabel?.font = UIFont.systemFont(ofSize: 30)
             button.setTitle(emoji, for: .normal)
-            button.accessibilityIdentifier = code
+            button.accessibilityIdentifier = "countryButton_\(code)"
             button.addTarget(self, action: #selector(countryButtonPressed(_:)), for: .touchUpInside)
             button.layer.cornerRadius = 20
             button.layer.masksToBounds = true
             button.backgroundColor = .systemBlue.withAlphaComponent(0.8)
             buttonStackView.addArrangedSubview(button)
         }
+
     }
 
     private func setupConstraints() {
@@ -95,14 +97,25 @@ final class ArticlesHeaderView: UIView {
     // MARK: - Actions
     @objc private func countryButtonPressed(_ sender: UIButton) {
         if let selectedButton = selectedButton {
-            selectedButton.backgroundColor = .systemBlue.withAlphaComponent(0.8)
+            deselectButton(selectedButton)
         }
-
         selectedButton = sender
-        selectedButton?.backgroundColor = .systemGreen
+        selectButton(selectedButton)
 
-        guard let country = sender.accessibilityIdentifier else { return }
+        guard let country = sender.accessibilityIdentifier?.components(separatedBy: "_").last else { return }
         didSelectCountry(country)
     }
-}
 
+    private func selectButton(_ button: UIButton?) {
+        button?.backgroundColor = .systemGreen
+        button?.layer.borderWidth = 2
+        button?.layer.borderColor = UIColor.systemOrange.cgColor
+        button?.accessibilityValue = "selected"
+    }
+
+    private func deselectButton(_ button: UIButton?) {
+        button?.backgroundColor = .systemBlue.withAlphaComponent(0.8)
+        button?.layer.borderWidth = 0
+        button?.accessibilityValue = "deselected"
+    }
+}

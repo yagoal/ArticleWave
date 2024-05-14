@@ -51,7 +51,7 @@ final class ArticleDetailsView: UIView {
 
     private lazy var contentLabel: CustomLabel = {
         let label = CustomLabel()
-        label.numberOfLines = 0
+        label.numberOfLines = 5
         label.font = UIFont.preferredFont(forTextStyle: .body)
         label.text = article.content ?? "Artigo sem conteúdo"
         if article.content == nil {
@@ -94,9 +94,11 @@ final class ArticleDetailsView: UIView {
         super.init(frame: .zero)
         setupViews()
         setupConstraints()
+        setupForUITesting()
         if let dateString = DateFormatter.string(fromISO: article.publishedAt, to: "dd MMM yyyy") {
             publicationDateLabel.text = "Publicado em: \(dateString)"
         }
+
     }
 
     required init?(coder: NSCoder) {
@@ -116,6 +118,15 @@ final class ArticleDetailsView: UIView {
         addSubview(goToSiteButton)
     }
     
+    private func setupForUITesting() {
+        scrollView.accessibilityIdentifier = "articleDetailsScrollView"
+        titleLabel.accessibilityIdentifier = "articleDetailsTitleLabel"
+        goToSiteButton.accessibilityIdentifier = "articleDetailsGoToSiteButton"
+        contentLabel.accessibilityIdentifier = "articleDetailsContentLabel"
+        articleImageView.accessibilityIdentifier = "articleDetailsImageView"
+        publicationDateLabel.accessibilityIdentifier = "articleDetailsPublicationDateLabel"
+    }
+
     private func setupConstraints() {
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 20),

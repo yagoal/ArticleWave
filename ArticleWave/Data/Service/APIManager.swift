@@ -14,8 +14,11 @@ protocol APIManagerType {
     func fetchArticles(_ country: String) -> AnyPublisher<[Article]?, Error>
 
     // MARK: - Image Fetching
-    func fetchImage(from url: URL) -> AnyPublisher<UIImage?, Never>
+    func downloadImage(from url: URL) -> AnyPublisher<UIImage?, Never>
 }
+
+import Combine
+import UIKit
 
 final class APIManager: APIManagerType {
     // MARK: - Singleton
@@ -24,9 +27,18 @@ final class APIManager: APIManagerType {
     // MARK: - Properties
     private let apiKey = "9510fe8ad20f4ccfbb624315a4cf3465"
     private let baseURL = "https://newsapi.org/v2/top-headlines"
+    private let isUITesting = LaunchArgument.check(.uiTest)
 
     // MARK: - Article Fetching
-    func fetchArticles(_ country: String) -> AnyPublisher<[Article]?, Error> {
+    func fetchArticles(_ country: String = "br") -> AnyPublisher<[Article]?, Error> {
+        if isUITesting {
+            return loadArticlesFromLocalJSON()
+        } else {
+            return fetchArticlesFromNetwork(country)
+        }
+    }
+
+    private func fetchArticlesFromNetwork(_ country: String) -> AnyPublisher<[Article]?, Error> {
         var components = URLComponents(string: baseURL)
         let queryItems = [URLQueryItem(name: "country", value: country), URLQueryItem(name: "apiKey", value: apiKey)]
         components?.queryItems = queryItems
@@ -66,11 +78,50 @@ final class APIManager: APIManagerType {
     }
 
     // MARK: - Image Fetching
-    func fetchImage(from url: URL) -> AnyPublisher<UIImage?, Never> {
-        return URLSession.shared.dataTaskPublisher(for: url)
-            .map { data, response -> UIImage? in UIImage(data: data) }
-            .replaceError(with: nil)
-            .receive(on: DispatchQueue.main)
+    func downloadImage(from url: URL) -> AnyPublisher<UIImage?, Never> {
+        if isUITesting {
+            return Just(nil).eraseToAnyPublisher()
+        } else {
+            return URLSession.shared.dataTaskPublisher(for: url)
+                .map { UIImage(data: $0.data) ?? UIImage() }
+                .replaceError(with: nil)
+                .eraseToAnyPublisher()
+        }
+    }
+}
+
+// MARK: - Load Mock JSON For UITesting
+extension APIManager {
+    private func loadArticlesFromLocalJSON() -> AnyPublisher<[Article]?, Error> {
+        guard let url = Bundle.main.url(
+            forResource: "MockArticles",
+            withExtension: "json"
+        ),
+        let data = try? Data(contentsOf: url)
+        else {
+            return Fail(error: APIError.invalidURL).eraseToAnyPublisher()
+        }
+
+        let isWithError = LaunchArgument.check(.useMockHttpRequestsWithError)
+        let isWithDelay = LaunchArgument.check(.useMockHttpRequestWithDelay)
+        let delay = isWithDelay ? 3 : 0
+
+        return Just(data)
+            .delay(for: .seconds(delay), scheduler: DispatchQueue.main)
+            .flatMap { data -> AnyPublisher<[Article]?, Error> in
+                if isWithError {
+                    return Fail(error: APIError.invalidResponse).eraseToAnyPublisher()
+                } else {
+                    return Just(data)
+                        .decode(type: ArticlesResponse.self, decoder: JSONDecoder())
+                        .map(\.articles)
+                        .eraseToAnyPublisher()
+                }
+            }
+            .mapError { error -> APIError in
+                print(error.localizedDescription)
+                return APIError.invalidResponse
+            }
             .eraseToAnyPublisher()
     }
 }

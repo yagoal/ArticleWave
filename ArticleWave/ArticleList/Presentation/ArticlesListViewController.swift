@@ -19,6 +19,7 @@ final class ArticlesListViewController: UIViewController {
     private let activityIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView(style: .large)
         indicator.translatesAutoresizingMaskIntoConstraints = false
+        indicator.accessibilityIdentifier = "activityIndicator"
         indicator.hidesWhenStopped = true
         return indicator
     }()
@@ -27,8 +28,21 @@ final class ArticlesListViewController: UIViewController {
         let blurEffect = UIBlurEffect(style: .light)
         let blurEffectView = UIVisualEffectView(effect: blurEffect)
         blurEffectView.translatesAutoresizingMaskIntoConstraints = false
+        blurEffectView.accessibilityIdentifier = "blurEffectView"
         blurEffectView.alpha = 0
         return blurEffectView
+    }()
+
+    private lazy var errorView: ErrorView = {
+        let view = ErrorView(
+            onRetry: { [weak self] in
+                guard let self else { return }
+                viewModel.fetchArticles(viewModel.currentCountry)
+            }
+        )
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.alpha = 0
+        return view
     }()
 
     // MARK: - View Lifecycle
@@ -59,6 +73,7 @@ final class ArticlesListViewController: UIViewController {
     private func setupAuxiliarViews() {
         rootView.addSubview(blurEffectView)
         rootView.addSubview(activityIndicator)
+        rootView.addSubview(errorView)
         NSLayoutConstraint.activate([
             blurEffectView.topAnchor.constraint(equalTo: view.topAnchor),
             blurEffectView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -66,7 +81,12 @@ final class ArticlesListViewController: UIViewController {
             blurEffectView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
             activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+            activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            
+            errorView.topAnchor.constraint(equalTo: view.topAnchor),
+            errorView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            errorView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            errorView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
 
@@ -74,44 +94,56 @@ final class ArticlesListViewController: UIViewController {
         viewModel.$articles
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
-                self?.rootView.articles = self?.viewModel.articles ?? []
+                guard let self else { return }
+                hideError()
+                activityIndicator.stopAnimating()
+                blurEffectView.alpha = 0
+                rootView.articles = viewModel.articles
             }
             .store(in: &cancellables)
-
+        
         viewModel.$images
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
-                self?.rootView.images = self?.viewModel.images ?? [:]
+                guard let self else { return }
+                rootView.images = viewModel.images
             }
             .store(in: &cancellables)
 
         viewModel.$isLoading
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isLoading in
-                guard let self = self else { return }
+                guard let self else { return }
                 if isLoading {
-                    self.activityIndicator.startAnimating()
-                    self.blurEffectView.alpha = 0.9
+                    activityIndicator.startAnimating()
+                    blurEffectView.alpha = 0.9
                 } else {
-                    self.activityIndicator.stopAnimating()
-                    self.blurEffectView.alpha = 0
+                    activityIndicator.stopAnimating()
+                    blurEffectView.alpha = 0
                 }
             }
             .store(in: &cancellables)
-
-        viewModel.$errorMessage
+        
+        viewModel.$hasError
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] errorMessage in
-                if let message = errorMessage {
-                    self?.showError(message: message)
+            .sink { [weak self] hasError in
+                guard let self else { return }
+                if hasError {
+                    showError()
+                } else {
+                    hideError()
                 }
             }
             .store(in: &cancellables)
     }
 
     // MARK: - Error Handling
-    private func showError(message: String) {
-        print("Error occurred: \(message)")
+    private func showError() {
+        errorView.alpha = 1
+    }
+
+    private func hideError() {
+        errorView.alpha = 0
     }
 }
 

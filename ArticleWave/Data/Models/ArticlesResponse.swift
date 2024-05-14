@@ -35,6 +35,22 @@ struct ArticlesResponse: Decodable {
     }
 }
 
+extension ArticlesResponse {
+    init(
+        status: String,
+        totalResults: Int? = nil,
+        articles: [Article]? = nil,
+        code: String? = nil,
+        message: String? = nil
+    ) {
+        self.status = status
+        self.totalResults = totalResults
+        self.articles = articles
+        self.code = code
+        self.message = message
+    }
+}
+
 struct Article: Codable {
     // MARK: - Nested Types
     struct Source: Codable {

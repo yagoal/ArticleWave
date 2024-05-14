@@ -127,6 +127,7 @@ final class ArticleListTableViewCell: UITableViewCell {
 
     private func setupChevronImageViewConstraints() {
         chevronImageView.setContentHuggingPriority(.required, for: .horizontal)
+        chevronImageView.setContentCompressionResistancePriority(.required, for: .horizontal)
     }
 
     private func setupIconViewConstraints() {
@@ -134,9 +135,13 @@ final class ArticleListTableViewCell: UITableViewCell {
             articleImage.widthAnchor.constraint(equalToConstant: 80),
             articleImage.heightAnchor.constraint(equalToConstant: 80),
         ])
+        articleImage.setContentHuggingPriority(.required, for: .horizontal)
+        articleImage.setContentCompressionResistancePriority(.required, for: .horizontal)
     }
 
     private func setupLabelsConstraints() {
+        labelsStackView.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+
         NSLayoutConstraint.activate([
             titleLabel.widthAnchor.constraint(lessThanOrEqualTo: labelsStackView.widthAnchor),
             authorLabel.widthAnchor.constraint(lessThanOrEqualTo: labelsStackView.widthAnchor),
@@ -148,5 +153,8 @@ final class ArticleListTableViewCell: UITableViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         articleImage.image = UIImage(named: "imageNotFound")
+        titleLabel.text = ""
+        authorLabel.text = ""
+        descriptionLabel.text = ""
     }
 }

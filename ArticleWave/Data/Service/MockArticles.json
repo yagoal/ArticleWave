@@ -1,0 +1,136 @@
+{
+  "status" : "ok",
+  "articles" : [
+    {
+      "source" : {
+        "id" : "google-news",
+        "name" : "Google News"
+      },
+      "author" : "Band Jornalismo",
+      "urlToImage" : null,
+      "content" : null,
+      "title" : "Prefeito pede evacuação imediata de sete bairros em Canoas, no RS - Band Jornalismo",
+      "publishedAt" : "2024-05-12T20:30:00Z",
+      "description" : null,
+      "url" : "https:\/\/news.google.com\/rss\/articles\/CBMibmh0dHBzOi8vd3d3LmJhbmQudW9sLmNvbS5ici9ub3RpY2lhcy9wcmVmZWl0by1wZWRlLWV2YWN1YWNhby1pbWVkaWF0YS1kZS1zZXRlLWJhaXJyb3MtZW0tY2Fub2FzLW5vLXJzLTE2Njg4ODgy0gFyaHR0cHM6Ly93d3cuYmFuZC51b2wuY29tLmJyL25vdGljaWFzL3ByZWZlaXRvLXBlZGUtZXZhY3VhY2FvLWltZWRpYXRhLWRlLXNldGUtYmFpcnJvcy1lbS1jYW5vYXMtbm8tcnMtMTY2ODg4ODIvYW1w?oc=5"
+    },
+    {
+      "source" : {
+        "id" : "google-news",
+        "name" : "Google News"
+      },
+      "author" : "Extra",
+      "urlToImage" : null,
+      "content" : null,
+      "title" : "Menino ou menina? Viih Tube e Eliezer descobrem o sexo do segundo bebê em live com mais de 170 mil pessoas - Extra",
+      "publishedAt" : "2024-05-12T20:20:33Z",
+      "description" : null,
+      "url" : "https:\/\/news.google.com\/rss\/articles\/CBMinwFodHRwczovL2V4dHJhLmdsb2JvLmNvbS9mYW1vc29zL25vdGljaWEvMjAyNC8wNS9tZW5pbm8tb3UtbWVuaW5hLXZpaWgtdHViZS1lLWVsaWV6ZXItZGVzY29icmVtLW8tc2V4by1kby1zZWd1bmRvLWJlYmUtZW0tbGl2ZS1jb20tbWFpcy1kZS0xMDAtbWlsLXBlc3NvYXMuZ2h0bWzSAaoBaHR0cHM6Ly9leHRyYS5nbG9iby5jb20vZ29vZ2xlL2FtcC9mYW1vc29zL25vdGljaWEvMjAyNC8wNS9tZW5pbm8tb3UtbWVuaW5hLXZpaWgtdHViZS1lLWVsaWV6ZXItZGVzY29icmVtLW8tc2V4by1kby1zZWd1bmRvLWJlYmUtZW0tbGl2ZS1jb20tbWFpcy1kZS0xMDAtbWlsLXBlc3NvYXMuZ2h0bWw?oc=5"
+    },
+    {
+      "source" : {
+        "id" : "google-news",
+        "name" : "Google News"
+      },
+      "author" : "Terra",
+      "urlToImage" : null,
+      "content" : null,
+      "title" : "Quanto Luciano Huck doou para o Rio Grande do Sul? Valor vem à tona e surpreende! - Terra",
+      "publishedAt" : "2024-05-12T19:48:00Z",
+      "description" : null,
+      "url" : "https:\/\/news.google.com\/rss\/articles\/CBMipQFodHRwczovL3d3dy50ZXJyYS5jb20uYnIvZGl2ZXJzYW8vZ2VudGUvcXVhbnRvLWx1Y2lhbm8taHVjay1kb291LXBhcmEtby1yaW8tZ3JhbmRlLWRvLXN1bC12YWxvci12ZW0tYS10b25hLWUtc3VycHJlZW5kZSxjNjNkNWZjYjMxZTIwZTQ4YWFhOGIxOWE0NDllMDBiNTY1cmR4YXV5Lmh0bWzSAakBaHR0cHM6Ly93d3cudGVycmEuY29tLmJyL2FtcC9kaXZlcnNhby9nZW50ZS9xdWFudG8tbHVjaWFuby1odWNrLWRvb3UtcGFyYS1vLXJpby1ncmFuZGUtZG8tc3VsLXZhbG9yLXZlbS1hLXRvbmEtZS1zdXJwcmVlbmRlLGM2M2Q1ZmNiMzFlMjBlNDhhYWE4YjE5YTQ0OWUwMGI1NjVyZHhhdXkuaHRtbA?oc=5"
+    },
+    {
+      "source" : {
+        "id" : "google-news",
+        "name" : "Google News"
+      },
+      "author" : "G1",
+      "urlToImage" : null,
+      "content" : null,
+      "title" : "Em decisão surpreendente, Putin demite ministro da Defesa em meio a avanço na guerra na Ucrânia - G1",
+      "publishedAt" : "2024-05-12T19:10:47Z",
+      "description" : null,
+      "url" : "https:\/\/news.google.com\/rss\/articles\/CBMiiAFodHRwczovL2cxLmdsb2JvLmNvbS9tdW5kby91Y3JhbmlhLXJ1c3NpYS9ub3RpY2lhLzIwMjQvMDUvMTIvcHV0aW4tZGVtaXRlLW1pbmlzdHJvLWRhLWRlZmVzYS1lbS1tZWlvLWEtYXZhbmNvLW5hLWd1ZXJyYS1uYS11Y3JhbmlhLmdodG1s0gGTAWh0dHBzOi8vZzEuZ2xvYm8uY29tL2dvb2dsZS9hbXAvbXVuZG8vdWNyYW5pYS1ydXNzaWEvbm90aWNpYS8yMDI0LzA1LzEyL3B1dGluLWRlbWl0ZS1taW5pc3Ryby1kYS1kZWZlc2EtZW0tbWVpby1hLWF2YW5jby1uYS1ndWVycmEtbmEtdWNyYW5pYS5naHRtbA?oc=5"
+    },
+    {
+      "source" : {
+        "id" : "google-news",
+        "name" : "Google News"
+      },
+      "author" : "MetSul.com",
+      "urlToImage" : null,
+      "content" : null,
+      "title" : "Frio intenso em áreas sob enchentes elevará o risco de hipotermia - MetSul.com",
+      "publishedAt" : "2024-05-12T18:12:12Z",
+      "description" : null,
+      "url" : "https:\/\/news.google.com\/rss\/articles\/CBMiVWh0dHBzOi8vbWV0c3VsLmNvbS9mcmlvLWludGVuc28tZW0tYXJlYXMtc29iLWVuY2hlbnRlcy1lbGV2YXJhLW8tcmlzY28tZGUtaGlwb3Rlcm1pYS_SAQA?oc=5"
+    },
+    {
+      "source" : {
+        "id" : "google-news",
+        "name" : "Google News"
+      },
+      "author" : "TNT Sports Brasil",
+      "urlToImage" : null,
+      "content" : null,
+      "title" : "Palmeiras x Athletico Paranaense: veja as escalações pela 6ª rodada do Brasileirão - TNT Sports Brasil",
+      "publishedAt" : "2024-05-12T17:54:00Z",
+      "description" : null,
+      "url" : "https:\/\/news.google.com\/rss\/articles\/CBMijgFodHRwczovL3RudHNwb3J0cy5jb20uYnIvZnV0ZWJvbGJyYXNpbGVpcm8vUGFsbWVpcmFzLXgtQXRobGV0aWNvLVBhcmFuYWVuc2UtdmVqYS1hcy1lc2NhbGFjb2VzLXBlbGEtNi1yb2RhZGEtZG8tQnJhc2lsZWlyYW8tMjAyNDA1MTItMDAxMS5odG1s0gGSAWh0dHBzOi8vdG50c3BvcnRzLmNvbS5ici9hbXAvZnV0ZWJvbGJyYXNpbGVpcm8vUGFsbWVpcmFzLXgtQXRobGV0aWNvLVBhcmFuYWVuc2UtdmVqYS1hcy1lc2NhbGFjb2VzLXBlbGEtNi1yb2RhZGEtZG8tQnJhc2lsZWlyYW8tMjAyNDA1MTItMDAxMS5odG1s?oc=5"
+    },
+    {
+      "source" : {
+        "id" : "google-news",
+        "name" : "Google News"
+      },
+      "author" : "Terra",
+      "urlToImage" : null,
+      "content" : null,
+      "title" : "Arsenal vence e joga a decisão do título inglês para a última rodada - Terra",
+      "publishedAt" : "2024-05-12T17:33:00Z",
+      "description" : null,
+      "url" : "https:\/\/news.google.com\/rss\/articles\/CBMiqgFodHRwczovL3d3dy50ZXJyYS5jb20uYnIvZXNwb3J0ZXMvZnV0ZWJvbC9pbnRlcm5hY2lvbmFsL2Fyc2VuYWwtdmVuY2UtZS1qb2dhLWEtZGVjaXNhby1kby10aXR1bG8taW5nbGVzLXBhcmEtYS11bHRpbWEtcm9kYWRhLDVhZjY0MWE0OGFiMWQ4ZjY3YTE4YTA3MThiYzBlNzQzbm1pZG1odjguaHRtbNIBrgFodHRwczovL3d3dy50ZXJyYS5jb20uYnIvYW1wL2VzcG9ydGVzL2Z1dGVib2wvaW50ZXJuYWNpb25hbC9hcnNlbmFsLXZlbmNlLWUtam9nYS1hLWRlY2lzYW8tZG8tdGl0dWxvLWluZ2xlcy1wYXJhLWEtdWx0aW1hLXJvZGFkYSw1YWY2NDFhNDhhYjFkOGY2N2ExOGEwNzE4YmMwZTc0M25taWRtaHY4Lmh0bWw?oc=5"
+    },
+    {
+      "source" : {
+        "id" : "google-news",
+        "name" : "Google News"
+      },
+      "author" : "Globo",
+      "urlToImage" : null,
+      "content" : null,
+      "title" : "Vasco avança em negociação e encaminha contratação do técnico Álvaro Pacheco - Globo",
+      "publishedAt" : "2024-05-12T17:29:48Z",
+      "description" : null,
+      "url" : "https:\/\/news.google.com\/rss\/articles\/CBMijgFodHRwczovL2dlLmdsb2JvLmNvbS9mdXRlYm9sL3RpbWVzL3Zhc2NvL25vdGljaWEvMjAyNC8wNS8xMi92YXNjby1hdmFuY2EtZW0tbmVnb2NpYWNhby1lLWVuY2FtaW5oYS1jb250cmF0YWNhby1kby10ZWNuaWNvLWFsdmFyby1wYWNoZWNvLmdodG1s0gGZAWh0dHBzOi8vZ2UuZ2xvYm8uY29tL2dvb2dsZS9hbXAvZnV0ZWJvbC90aW1lcy92YXNjby9ub3RpY2lhLzIwMjQvMDUvMTIvdmFzY28tYXZhbmNhLWVtLW5lZ29jaWFjYW8tZS1lbmNhbWluaGEtY29udHJhdGFjYW8tZG8tdGVjbmljby1hbHZhcm8tcGFjaGVjby5naHRtbA?oc=5"
+    },
+    {
+      "source" : {
+        "id" : "google-news",
+        "name" : "Google News"
+      },
+      "author" : "Extra",
+      "urlToImage" : null,
+      "content" : null,
+      "title" : "Filho de Gugu Liberato se forma nos EUA na presença da mãe e irmãs - Extra",
+      "publishedAt" : "2024-05-12T17:29:34Z",
+      "description" : null,
+      "url" : "https:\/\/news.google.com\/rss\/articles\/CBMidGh0dHBzOi8vZXh0cmEuZ2xvYm8uY29tL2ZhbW9zb3Mvbm90aWNpYS8yMDI0LzA1L2ZpbGhvLWRlLWd1Z3UtbGliZXJhdG8tc2UtZm9ybWEtbm9zLWV1YS1lLXBvc2EtY29tLW1hZS1lLWlybWFzLmdodG1s0gF_aHR0cHM6Ly9leHRyYS5nbG9iby5jb20vZ29vZ2xlL2FtcC9mYW1vc29zL25vdGljaWEvMjAyNC8wNS9maWxoby1kZS1ndWd1LWxpYmVyYXRvLXNlLWZvcm1hLW5vcy1ldWEtZS1wb3NhLWNvbS1tYWUtZS1pcm1hcy5naHRtbA?oc=5"
+    },
+    {
+      "source" : {
+        "id" : "google-news",
+        "name" : "Google News"
+      },
+      "author" : "O POVO",
+      "urlToImage" : null,
+      "content" : null,
+      "title" : "Sarto e Evandro voltam a trocar farpas sobre Fortaleza e expõem polarização entre PT e PDT - O POVO",
+      "publishedAt" : "2024-05-12T16:35:39Z",
+      "description" : null,
+      "url" : "https:\/\/news.google.com\/rss\/articles\/CBMilQFodHRwczovL3d3dy5vcG92by5jb20uYnIvbm90aWNpYXMvcG9saXRpY2EvMjAyNC8wNS8xMi9zYXJ0by1lLWV2YW5kcm8tdm9sdGFtLWEtdHJvY2FyLWZhcnBhcy1zb2JyZS1mb3J0YWxlemEtZS1leHBvZW0tcG9sYXJpemFjYW8tZW50cmUtcHQtZS1wZHQuaHRtbNIBmQFodHRwczovL3d3dy5vcG92by5jb20uYnIvbm90aWNpYXMvcG9saXRpY2EvMjAyNC8wNS8xMi9hbXAvc2FydG8tZS1ldmFuZHJvLXZvbHRhbS1hLXRyb2Nhci1mYXJwYXMtc29icmUtZm9ydGFsZXphLWUtZXhwb2VtLXBvbGFyaXphY2FvLWVudHJlLXB0LWUtcGR0Lmh0bWw?oc=5"
+    }
+  ],
+  "totalResults" : 27
+}

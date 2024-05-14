@@ -13,8 +13,9 @@ final class ArticlesListViewModel {
     // MARK: - Properties
     @Published private(set) var articles: [Article] = []
     @Published private(set) var isLoading: Bool = false
-    @Published private(set) var errorMessage: String?
+    @Published private(set) var hasError = false
     @Published private(set) var images: [URL: UIImage] = [:]
+    private(set) var currentCountry: String = "br"
 
     private var cancellables: Set<AnyCancellable> = []
     private let apiManager: APIManagerType
@@ -30,16 +31,20 @@ final class ArticlesListViewModel {
             isLoading = true
         }
 
-        errorMessage = nil
+        currentCountry = country
+        if hasError {
+            hasError = false
+        }
 
         apiManager.fetchArticles(country)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
-                guard let self = self else { return }
-                isLoading = false
-                if case .failure(let error) = completion {
-                    self.errorMessage = error.localizedDescription
-                }
+                 guard let self else { return }
+                 isLoading = false
+                 switch completion {
+                 case .failure: hasError = true
+                 case .finished: break
+                 }
             }, receiveValue: { [weak self] articles in
                 guard let self else { return }
                 self.articles = articles ?? []
@@ -63,7 +68,7 @@ final class ArticlesListViewModel {
     }
 
     private func fetchImage(url: URL) -> AnyPublisher<UIImage?, Error> {
-        apiManager.fetchImage(from: url)
+        apiManager.downloadImage(from: url)
             .setFailureType(to: Error.self)
             .eraseToAnyPublisher()
     }

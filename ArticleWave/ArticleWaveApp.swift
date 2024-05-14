@@ -11,8 +11,7 @@ import SwiftUI
 struct ArticleWaveApp: App {
     var body: some Scene {
         WindowGroup {
-            ArticleListViewRepresentable()
-                .background(Color.cyan)
+            ArticleStartViewRepresentable()
                 .padding()
         }
     }

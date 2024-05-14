@@ -1,5 +1,5 @@
 //
-//  ArticleViewRepresentable.swift
+//  ArticleStartViewRepresentable.swift
 //  ArticleWave
 //
 //  Created by Yago Pereira on 11/5/24.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ArticleListViewRepresentable: UIViewControllerRepresentable {
+struct ArticleStartViewRepresentable: UIViewControllerRepresentable {
     typealias UIViewControllerType = UINavigationController
 
     func makeUIViewController(context: Context) -> UINavigationController {

@@ -15,6 +15,7 @@ ArticleWave é um aplicativo iOS desenvolvido para exibir notícias de várias f
 - **Criatividade no Layout**: Layouts personalizados e uma interface intuitiva.
 - **Testes com XCTest**: Testes unitários e de UI foram implementados utilizando XCTest.
 - **Guia de Design da Apple**: Seguiu as Apple Human Interface Guidelines para garantir uma interface de usuário consistente e intuitiva.
+- **Suporte a Tema Escuro**: O aplicativo oferece suporte a tema claro e escuro, ajustando automaticamente as cores da interface do usuário com base na configuração do sistema.
 
 ## Arquitetura
 

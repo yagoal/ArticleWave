@@ -13,48 +13,37 @@ final class ErrorView: UIView {
     private let onRetry: () -> Void
 
     // MARK: - Subviews
-    private lazy var errorImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: "error")
+    private lazy var errorImageView = UIImageView() .. {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.contentMode = .scaleAspectFit
+        $0.image = UIImage(named: "error")
+    }
 
-        return imageView
-    }()
+    private lazy var titleLabel = UILabel() .. {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.font = UIFont.systemFont(ofSize: 24, weight: .bold)
+        $0.textColor = .black
+        $0.textAlignment = .center
+        $0.text = "Ocorreu um Erro"
+    }
 
-    private lazy var titleLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFont(ofSize: 24, weight: .bold)
-        label.textColor = .black
-        label.textAlignment = .center
-        label.text = "Ocorreu um Erro"
+    private lazy var subtitleLabel = UILabel() .. {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.font = UIFont.systemFont(ofSize: 18, weight: .regular)
+        $0.textColor = .darkGray
+        $0.textAlignment = .center
+        $0.text = "Não foi possível completar sua solicitação."
+        $0.numberOfLines = 0
+    }
 
-        return label
-    }()
-
-    private lazy var subtitleLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFont(ofSize: 18, weight: .regular)
-        label.textColor = .darkGray
-        label.textAlignment = .center
-        label.text = "Não foi possível completar sua solicitação."
-        label.numberOfLines = 0
-        return label
-    }()
-
-    private lazy var retryButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Tentar Novamente", for: .normal)
-        button.backgroundColor = UIColor.systemBlue
-        button.setTitleColor(.white, for: .normal)
-        button.layer.cornerRadius = 10
-
-        button.addTarget(self, action: #selector(retryAction), for: .touchUpInside)
-        return button
-    }()
+    private lazy var retryButton = UIButton(type: .system) .. {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.setTitle("Tentar Novamente", for: .normal)
+        $0.backgroundColor = UIColor.systemBlue
+        $0.setTitleColor(.white, for: .normal)
+        $0.layer.cornerRadius = 10
+        $0.addTarget(self, action: #selector(retryAction), for: .touchUpInside)
+    }
 
     // MARK: - Init
     init(onRetry: @escaping () -> Void) {
@@ -86,25 +75,27 @@ final class ErrorView: UIView {
     }
 
     private func setupConstraints() {
-        NSLayoutConstraint.activate([
-            errorImageView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            errorImageView.centerYAnchor.constraint(equalTo: centerYAnchor, constant: -120),
-            errorImageView.widthAnchor.constraint(equalToConstant: 100),
-            errorImageView.heightAnchor.constraint(equalToConstant: 100),
+        errorImageView
+            .centerX(to: centerXAnchor)
+            .centerY(to: centerYAnchor, constant: -120)
+            .width(100)
+            .height(100)
 
-            titleLabel.topAnchor.constraint(equalTo: errorImageView.bottomAnchor, constant: 20),
-            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
-            titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
+        titleLabel
+            .top(to: errorImageView.bottomAnchor, constant: 20)
+            .leading(to: leadingAnchor, constant: 20)
+            .trailing(to: trailingAnchor, constant: -20)
 
-            subtitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 10),
-            subtitleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
-            subtitleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
+        subtitleLabel
+            .top(to: titleLabel.bottomAnchor, constant: 10)
+            .leading(to: leadingAnchor, constant: 20)
+            .trailing(to: trailingAnchor, constant: -20)
 
-            retryButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -20),
-            retryButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
-            retryButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
-            retryButton.heightAnchor.constraint(equalToConstant: 50)
-        ])
+        retryButton
+            .bottom(to: bottomAnchor, constant: -20)
+            .leading(to: leadingAnchor, constant: 10)
+            .trailing(to: trailingAnchor, constant: -10)
+            .height(50)
     }
 
     // MARK: - Actions

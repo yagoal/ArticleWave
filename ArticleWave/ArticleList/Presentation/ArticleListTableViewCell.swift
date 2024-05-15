@@ -10,70 +10,61 @@ import UIKit
 final class ArticleListTableViewCell: UITableViewCell {
     static let identifier = "ArticleTableViewCell"
 
+    // MARK: - Properties
+    private var article: Article?
+
     // MARK: - Subviews
-    private lazy var articleImage: UIImageView = {
-        let imageView = UIImageView.defaultImageView
-        imageView.clipsToBounds = true
-        imageView.layer.cornerRadius = 40
-        return imageView
-    }()
+    private lazy var articleImage = UIImageView.defaultImageView .. {
+        $0.clipsToBounds = true
+        $0.layer.cornerRadius = 40
+        $0.layer.borderColor = UIColor.systemGray.cgColor
+        $0.layer.borderWidth = 2
+    }
 
-    private lazy var titleLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 14, weight: .bold)
-        label.numberOfLines = 0
-        return label
-    }()
+    private lazy var loadingIndicator = UIActivityIndicatorView(style: .medium) .. {
+        $0.hidesWhenStopped = true
+    }
 
-    private lazy var authorLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 10, weight: .regular)
-        label.textColor = .darkGray
-        label.numberOfLines = 0
-        return label
-    }()
+    private lazy var titleLabel = UILabel() .. {
+        $0.font = UIFont.systemFont(ofSize: 14, weight: .bold)
+        $0.numberOfLines = 0
+    }
 
-    private lazy var descriptionLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 12, weight: .light)
-        label.numberOfLines = 2
-        return label
-    }()
+    private lazy var authorLabel = UILabel() .. {
+        $0.font = UIFont.systemFont(ofSize: 10, weight: .regular)
+        $0.textColor = .darkGray
+        $0.numberOfLines = 0
+    }
 
-    private lazy var chevronImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(systemName: "chevron.right")
-        imageView.tintColor = .gray
-        return imageView
-    }()
+    private lazy var descriptionLabel = UILabel() .. {
+        $0.font = UIFont.systemFont(ofSize: 12, weight: .light)
+        $0.numberOfLines = 2
+    }
 
-    private lazy var labelsStackView: UIStackView = {
-        let stackView = UIStackView(
-            arrangedSubviews: [
-                titleLabel,
-                descriptionLabel,
-                authorLabel
-            ]
-        )
-        stackView.axis = .vertical
-        stackView.spacing = 4
-        return stackView
-    }()
+    private lazy var chevronImageView = UIImageView() .. {
+        $0.contentMode = .scaleAspectFit
+        $0.image = UIImage(systemName: "chevron.right")
+        $0.tintColor = .gray
+    }
 
-    private lazy var contentStackView: UIStackView = {
-        let stackView = UIStackView(
-            arrangedSubviews: [
-                articleImage,
-                labelsStackView,
-                chevronImageView
-            ]
-        )
-        stackView.axis = .horizontal
-        stackView.alignment = .center
-        stackView.spacing = 10
-        return stackView
-    }()
+    private lazy var labelsStackView = UIStackView(arrangedSubviews: [
+        titleLabel,
+        descriptionLabel,
+        authorLabel
+    ]) .. {
+        $0.axis = .vertical
+        $0.spacing = 4
+    }
+
+    private lazy var contentStackView = UIStackView(arrangedSubviews: [
+        articleImage,
+        labelsStackView,
+        chevronImageView
+    ]) .. {
+        $0.axis = .horizontal
+        $0.alignment = .center
+        $0.spacing = 10
+    }
 
     // MARK: - Init
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -87,18 +78,52 @@ final class ArticleListTableViewCell: UITableViewCell {
     }
 
     // MARK: - Configuration
-    func configure(with article: Article) {
-        titleLabel.text = article.title
-
-        if let author = article.author {
-            authorLabel.text = "Author: \(author)"
+    func configure(with article: Article?) {
+        guard let article = article else {
+            resetCell()
+            return
         }
 
+        self.article = article
+
+        titleLabel.text = article.title
+        authorLabel.text = article.author != nil ? "Author: \(article.author!)" : nil
         descriptionLabel.text = article.description
+
+        configureImage(with: article.urlToImage)
     }
 
-    func updateImage(with image: UIImage?) {
-        articleImage.image = image
+    private func configureImage(with urlString: String?) {
+        guard let urlString = urlString, let url = URL(string: urlString) else {
+            articleImage.image = UIImage(named: "imageNotFound")
+            return
+        }
+
+        articleImage.image = nil
+        loadingIndicator.startAnimating()
+        articleImage.addSubview(loadingIndicator)
+        loadingIndicator.centerX(to: articleImage.centerXAnchor)
+        loadingIndicator.centerY(to: articleImage.centerYAnchor)
+
+        ImageFetcher.shared.fetch(url: url) { result in
+            DispatchQueue.main.async { [weak self] in
+                guard let self else { return }
+                loadingIndicator.stopAnimating()
+                switch result {
+                case .success(let image):
+                    articleImage.image = image
+                case .failure:
+                    articleImage.image = UIImage(named: "imageNotFound")
+                }
+            }
+        }
+    }
+
+    private func resetCell() {
+        articleImage.image = nil
+        titleLabel.text = ""
+        authorLabel.text = ""
+        descriptionLabel.text = ""
     }
 
     // MARK: - View Setup
@@ -115,14 +140,11 @@ final class ArticleListTableViewCell: UITableViewCell {
     }
 
     private func setupContentStackViewConstraints() {
-        contentStackView.translatesAutoresizingMaskIntoConstraints = false
-
-        NSLayoutConstraint.activate([
-            contentStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
-            contentStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
-            contentStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
-            contentStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
-        ])
+        contentStackView
+            .leading(to: contentView.leadingAnchor, constant: 10)
+            .trailing(to: contentView.trailingAnchor, constant: -10)
+            .top(to: contentView.topAnchor, constant: 10)
+            .bottom(to: contentView.bottomAnchor, constant: -10)
     }
 
     private func setupChevronImageViewConstraints() {
@@ -131,10 +153,10 @@ final class ArticleListTableViewCell: UITableViewCell {
     }
 
     private func setupIconViewConstraints() {
-        NSLayoutConstraint.activate([
-            articleImage.widthAnchor.constraint(equalToConstant: 80),
-            articleImage.heightAnchor.constraint(equalToConstant: 80),
-        ])
+        articleImage
+            .width(80)
+            .height(80)
+
         articleImage.setContentHuggingPriority(.required, for: .horizontal)
         articleImage.setContentCompressionResistancePriority(.required, for: .horizontal)
     }
@@ -142,19 +164,20 @@ final class ArticleListTableViewCell: UITableViewCell {
     private func setupLabelsConstraints() {
         labelsStackView.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
 
-        NSLayoutConstraint.activate([
-            titleLabel.widthAnchor.constraint(lessThanOrEqualTo: labelsStackView.widthAnchor),
-            authorLabel.widthAnchor.constraint(lessThanOrEqualTo: labelsStackView.widthAnchor),
-            descriptionLabel.widthAnchor.constraint(lessThanOrEqualTo: labelsStackView.widthAnchor),
-        ])
+        titleLabel.width(lessThanOrEqualTo: labelsStackView.widthAnchor)
+        authorLabel.width(lessThanOrEqualTo: labelsStackView.widthAnchor)
+        descriptionLabel.width(lessThanOrEqualTo: labelsStackView.widthAnchor)
     }
 
     // MARK: - Lifecycle
     override func prepareForReuse() {
         super.prepareForReuse()
-        articleImage.image = UIImage(named: "imageNotFound")
-        titleLabel.text = ""
-        authorLabel.text = ""
-        descriptionLabel.text = ""
+
+        resetCell()
+
+        guard let urlString = article?.urlToImage, let url = URL(string: urlString) else {
+            return
+        }
+        ImageFetcher.shared.cancel(url: url)
     }
 }

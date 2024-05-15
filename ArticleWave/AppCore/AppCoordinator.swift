@@ -5,6 +5,7 @@
 //  Created by Yago Pereira on 13/5/24.
 //
 
+import SafariServices
 import UIKit
 
 final class AppCoordinator {
@@ -20,16 +21,18 @@ final class AppCoordinator {
         rootViewController.pushViewController(articlesListViewController, animated: false)
     }
 
-    func triggerDetails(for article: Article, with imageView: UIImageView) {
+    func triggerDetails(for article: Article, with imageView: UIImage) {
         let articleDetailsViewController = ArticleDetailsViewController(
             article: article,
-            imageView: imageView
+            image: imageView
         )
         articleDetailsViewController.coordinator = self
         rootViewController.pushViewController(articleDetailsViewController, animated: true)
     }
 
     func triggerOpenURL(for url: URL) {
-        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        let safariViewController = SFSafariViewController(url: url)
+        safariViewController.modalPresentationStyle = .pageSheet
+        rootViewController.present(safariViewController, animated: true, completion: nil)
     }
 }

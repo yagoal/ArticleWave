@@ -10,7 +10,7 @@ import UIKit
 final class ArticleDetailsViewController: UIViewController {
     // MARK: - Properties
     private let article: Article
-    private let imageView: UIImageView
+    private let image: UIImage
 
     var coordinator: AppCoordinator?
 
@@ -18,18 +18,15 @@ final class ArticleDetailsViewController: UIViewController {
     override func loadView() {
         view = ArticleDetailsView(
             article: article,
-            imageView: imageView,
-            onGoToSitePressed: { [weak self] url in
-                guard let self else { return }
-                coordinator?.triggerOpenURL(for: url)
-            }
+            image: image,
+            onGoToSitePressed: weakify { $0.coordinator?.triggerOpenURL(for: $1) }
         )
     }
 
     // MARK: - Init
-    init(article: Article, imageView: UIImageView) {
+    init(article: Article, image: UIImage) {
         self.article = article
-        self.imageView = imageView
+        self.image = image
         super.init(nibName: nil, bundle: nil)
     }
 

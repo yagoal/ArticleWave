@@ -37,30 +37,26 @@ final class ArticlesListViewModelTests: XCTestCase {
             XCTFail("URL could not be initialized.")
             return
         }
-        
+
         let expectedImage = UIImage()
         let expectedArticles = [Article.stub(title: expectedTitle, urlToImage: expectedImageUrlString)]
         let response = ArticlesResponseFactory.makeResponse(articles: expectedArticles)
-        
+
         mockAPIManager.expectedResponse = .success(response)
-        mockAPIManager.imageResponses[expectedImageUrl] = expectedImage
-        
+
         var fetchedArticles: [Article] = []
-        var fetchedImages: [URL: UIImage] = [:]
 
         // When
-        sut.$articles
+        sut.$state
             .dropFirst()
-            .sink(receiveValue: { articles in
-                fetchedArticles = articles
-            })
-            .store(in: &cancellables)
-        
-        sut.$images
-            .dropFirst()
-            .sink(receiveValue: { images in
-                fetchedImages = images
-                expectation.fulfill()
+            .sink(receiveValue: { state in
+                switch state {
+                case .loaded(let articles):
+                    fetchedArticles = articles
+                    expectation.fulfill()
+                default:
+                    break
+                }
             })
             .store(in: &cancellables)
 
@@ -70,8 +66,6 @@ final class ArticlesListViewModelTests: XCTestCase {
         waitForExpectations(timeout: 1) { error in
             XCTAssertEqual(fetchedArticles.count, 1, "Should have received one article.")
             XCTAssertEqual(fetchedArticles.first?.title, expectedTitle, "Article title should match.")
-            XCTAssertEqual(fetchedImages.count, 1, "Should have received one image.")
-            XCTAssertEqual(fetchedImages[expectedImageUrl], expectedImage, "Image should match.")
         }
     }
 
@@ -79,15 +73,17 @@ final class ArticlesListViewModelTests: XCTestCase {
         // Given
         let expectation = self.expectation(description: "Expect fetch to fail")
         mockAPIManager.expectedResponse = .failure(APIError.invalidResponse)
-        
+
         var hasErrorOccurred = false
 
         // When
-        sut.$hasError
+        sut.$state
             .dropFirst()
-            .sink(receiveValue: { hasError in
-                hasErrorOccurred = hasError
-                expectation.fulfill()
+            .sink(receiveValue: { state in
+                if case .error = state {
+                    hasErrorOccurred = true
+                    expectation.fulfill()
+                }
             })
             .store(in: &cancellables)
 
@@ -95,7 +91,7 @@ final class ArticlesListViewModelTests: XCTestCase {
 
         // Then
         waitForExpectations(timeout: 1) { error in
-            XCTAssertTrue(hasErrorOccurred, "Should have set hasError to true due to API failure.")
+            XCTAssertTrue(hasErrorOccurred, "Should have set state to error due to API failure.")
         }
     }
 }

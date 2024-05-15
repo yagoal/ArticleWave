@@ -12,9 +12,6 @@ import UIKit
 protocol APIManagerType {
     // MARK: - Article Fetching
     func fetchArticles(_ country: String) -> AnyPublisher<[Article]?, Error>
-
-    // MARK: - Image Fetching
-    func downloadImage(from url: URL) -> AnyPublisher<UIImage?, Never>
 }
 
 import Combine
@@ -76,18 +73,6 @@ final class APIManager: APIManagerType {
             print("Failed to read JSON data.")
         }
     }
-
-    // MARK: - Image Fetching
-    func downloadImage(from url: URL) -> AnyPublisher<UIImage?, Never> {
-        if isUITesting {
-            return Just(nil).eraseToAnyPublisher()
-        } else {
-            return URLSession.shared.dataTaskPublisher(for: url)
-                .map { UIImage(data: $0.data) ?? UIImage() }
-                .replaceError(with: nil)
-                .eraseToAnyPublisher()
-        }
-    }
 }
 
 // MARK: - Load Mock JSON For UITesting
@@ -104,7 +89,7 @@ extension APIManager {
 
         let isWithError = LaunchArgument.check(.useMockHttpRequestsWithError)
         let isWithDelay = LaunchArgument.check(.useMockHttpRequestWithDelay)
-        let delay = isWithDelay ? 8 : 0
+        let delay = isWithDelay ? 3 : 0
 
         return Just(data)
             .flatMap { data -> AnyPublisher<[Article]?, Error> in

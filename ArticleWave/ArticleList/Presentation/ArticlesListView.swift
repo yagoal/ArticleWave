@@ -8,7 +8,7 @@
 import UIKit
 
 protocol ArticlesViewDelegate: AnyObject {
-    func didSelectArticle(_ article: Article, withImage imageView: UIImageView)
+    func didSelectArticle(_ article: Article, withImage imageView: UIImage)
     func didSelectCountry(_ country: String, _ isRefreshing: Bool)
 }
 
@@ -18,42 +18,26 @@ final class ArticlesListView: UIView {
     private var selectedCountry: String?
 
     // MARK: - Subviews
-    private lazy var headerView: ArticlesHeaderView = {
-        let view = ArticlesHeaderView(
-            didSelectCountry: { [weak self] in
-                guard let self else { return }
-                selectedCountry = $0
-                delegate?.didSelectCountry($0, false)
-            }
-        )
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
+    private lazy var headerView = ArticlesHeaderView(
+        didSelectCountry: weakify {
+            $0.selectedCountry = $1
+            $0.delegate?.didSelectCountry($1, false)
+        }
+    )
 
-    private lazy var articlesTableView: UITableView = {
-        let tableView = UITableView()
-        tableView.accessibilityIdentifier = "articlesTableView"
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.register(ArticleListTableViewCell.self, forCellReuseIdentifier: ArticleListTableViewCell.identifier)
-        tableView.delegate = self
-        tableView.dataSource = self
-        return tableView
-    }()
+    private lazy var articlesTableView = UITableView() .. {
+        $0.accessibilityIdentifier = "articlesTableView"
+        $0.register(ArticleListTableViewCell.self, forCellReuseIdentifier: ArticleListTableViewCell.identifier)
+        $0.delegate = self
+        $0.dataSource = self
+    }
 
-    private lazy var refreshControl: UIRefreshControl = {
-        let refreshControl = UIRefreshControl()
-        refreshControl.addTarget(self, action: #selector(handleRefresh(_:)), for: .valueChanged)
-        return refreshControl
-    }()
+    private lazy var refreshControl = UIRefreshControl() .. {
+        $0.addTarget(self, action: #selector(handleRefresh(_:)), for: .valueChanged)
+    }
 
     // MARK: - Properties
     var articles: [Article] = [] {
-        didSet {
-            reloadData()
-        }
-    }
-
-    var images: [URL: UIImage] = [:] {
         didSet {
             reloadData()
         }
@@ -69,27 +53,24 @@ final class ArticlesListView: UIView {
     }
 
     required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        addSubview(headerView)
-        addSubview(articlesTableView)
-        articlesTableView.refreshControl = refreshControl
-        configureConstraint()
+        fatalError("init(coder:) has not been implemented")
     }
-    
+
     // MARK: - Private Methods
     private func configureConstraint() {
-        NSLayoutConstraint.activate([
-            headerView.topAnchor.constraint(equalTo: topAnchor),
-            headerView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            headerView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            headerView.heightAnchor.constraint(equalToConstant: 100),
+        headerView
+            .top(to: topAnchor)
+            .leading(to: leadingAnchor)
+            .trailing(to: trailingAnchor)
+            .height(100)
 
-            articlesTableView.topAnchor.constraint(equalTo: headerView.bottomAnchor),
-            articlesTableView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            articlesTableView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            articlesTableView.bottomAnchor.constraint(equalTo: bottomAnchor)
-        ])
+        articlesTableView
+            .top(to: headerView.bottomAnchor)
+            .leading(to: leadingAnchor)
+            .trailing(to: trailingAnchor)
+            .bottom(to: bottomAnchor)
     }
+
 
     // MARK: - Public Methods
     func reloadData() {
@@ -105,6 +86,7 @@ final class ArticlesListView: UIView {
 }
 
 // MARK: - TableView DataSource & Delegate
+// MARK: - TableView DataSource & Delegate
 extension ArticlesListView: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: ArticleListTableViewCell.identifier, for: indexPath) as? ArticleListTableViewCell else {
@@ -118,34 +100,17 @@ extension ArticlesListView: UITableViewDataSource, UITableViewDelegate {
         return articles.count
     }
 
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        guard let cell = cell as? ArticleListTableViewCell else { return }
-        let article = articles[indexPath.row]
-
-        if let imageUrl = article.urlToImage, let url = URL(string: imageUrl) {
-            if let image = images[url] {
-                cell.updateImage(with: image)
-            } else {
-                cell.updateImage(with: UIImage(named: "imageNotFound"))
-            }
-        }
-    }
-
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let article = articles[indexPath.row]
-        let imageView: UIImageView = .defaultImageView
-        guard
-            let urlString = article.urlToImage,
-            let url = URL(string: urlString),
-            let image = images[url]
-        else {
-            delegate?.didSelectArticle(article, withImage: imageView)
-            return
+
+        var image = UIImage(named: "imageNotFound")
+        if let urlString = article.urlToImage, let url = URL(string: urlString) {
+            if let cachedImage = ImageFetcher.shared.imageCache.object(forKey: url as NSURL) {
+                image = cachedImage
+            }
         }
 
-        imageView.image = image
-
-        delegate?.didSelectArticle(article, withImage: imageView)
+        delegate?.didSelectArticle(article, withImage: image ?? UIImage())
     }
 }

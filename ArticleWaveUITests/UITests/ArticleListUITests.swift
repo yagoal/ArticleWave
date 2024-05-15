@@ -42,7 +42,7 @@ final class ArticleListUITests: XCTestCase {
         )
 
         waitForExpectations(timeout: 5)
-        
+    
         XCTAssertFalse(
             blurEffectView.isHittable,
             "The blur effect view should not be hittable after loading."

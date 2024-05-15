@@ -7,39 +7,31 @@
 
 import UIKit
 
-import UIKit
-
 final class ArticlesHeaderView: UIView {
     // MARK: - Properties
     private let didSelectCountry: (_ country: String) -> Void
     private var selectedButton: UIButton?
 
     // MARK: - Subviews
-    private let titleLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Notícias"
-        label.font = UIFont.systemFont(ofSize: 20, weight: .bold)
-        label.textAlignment = .center
-        label.accessibilityIdentifier = "newsTitleIdentifier"
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
+    private let titleLabel = UILabel() .. {
+        $0.text = "Notícias"
+        $0.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+        $0.textAlignment = .center
+        $0.accessibilityIdentifier = "newsTitleIdentifier"
+    }
 
-    private let buttonStackView: UIStackView = {
-        let stack = UIStackView()
-        stack.axis = .horizontal
-        stack.distribution = .fillEqually
-        stack.spacing = 10
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        return stack
-    }()
+    private let buttonStackView = UIStackView() .. {
+        $0.axis = .horizontal
+        $0.distribution = .fillEqually
+        $0.spacing = 10
+    }
 
     // MARK: - Initialization
     init(didSelectCountry: @escaping (_ country: String) -> Void) {
         self.didSelectCountry = didSelectCountry
         super.init(frame: .zero)
         setupViews()
-        setupConstraints()
+        configureConstraint()
         setupDefaultSelection()
     }
 
@@ -50,36 +42,36 @@ final class ArticlesHeaderView: UIView {
     // MARK: - Setup Methods
     private func setupViews() {
         backgroundColor = .systemBackground
-
         addSubview(titleLabel)
         addSubview(buttonStackView)
 
         for country in CountryOptions.allCases {
-            let button = UIButton(type: .system)
-            button.titleLabel?.font = UIFont.systemFont(ofSize: 30)
-            button.setTitle(country.emoji, for: .normal)
-            button.accessibilityIdentifier = "countryButton_\(country.rawValue)"
-            button.addTarget(self, action: #selector(countryButtonPressed(_:)), for: .touchUpInside)
-            button.layer.cornerRadius = 20
-            button.layer.masksToBounds = true
-            button.backgroundColor = .systemBlue.withAlphaComponent(0.8)
+            let button = UIButton(type: .system) .. {
+                $0.titleLabel?.font = UIFont.systemFont(ofSize: 30)
+                $0.setTitle(country.emoji, for: .normal)
+                $0.accessibilityIdentifier = "countryButton_\(country.rawValue)"
+                $0.addTarget(self, action: #selector(countryButtonPressed(_:)), for: .touchUpInside)
+                $0.layer.cornerRadius = 20
+                $0.layer.masksToBounds = true
+                $0.backgroundColor = .systemBlue.withAlphaComponent(0.8)
+            }
+
             buttonStackView.addArrangedSubview(button)
         }
     }
 
-    private func setupConstraints() {
-        NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: 10),
-            titleLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
-            titleLabel.heightAnchor.constraint(equalToConstant: 30),
+    private func configureConstraint() {
+        titleLabel
+            .top(to: topAnchor, constant: 10)
+            .centerX(to: centerXAnchor)
+            .height(30)
 
-            buttonStackView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 10),
-            buttonStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
-            buttonStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
-            buttonStackView.heightAnchor.constraint(equalToConstant: 40),
-
-            bottomAnchor.constraint(equalTo: buttonStackView.bottomAnchor, constant: 10)
-        ])
+        buttonStackView
+            .top(to: titleLabel.bottomAnchor, constant: 10)
+            .leading(to: leadingAnchor, constant: 10)
+            .trailing(to: trailingAnchor, constant: -10)
+            .height(40)
+            .bottomAnchor(to: bottomAnchor, constant: -10)
     }
 
     private func setupDefaultSelection() {

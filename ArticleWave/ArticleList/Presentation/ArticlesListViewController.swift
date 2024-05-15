@@ -18,34 +18,23 @@ final class ArticlesListViewController: UIViewController {
     var coordinator: AppCoordinator?
 
     // MARK: - Subviews
-    private let activityIndicator: UIActivityIndicatorView = {
-        let indicator = UIActivityIndicatorView(style: .large)
-        indicator.translatesAutoresizingMaskIntoConstraints = false
-        indicator.accessibilityIdentifier = "activityIndicator"
-        indicator.hidesWhenStopped = true
-        return indicator
-    }()
+    private let activityIndicator = UIActivityIndicatorView(style: .large) .. {
+        $0.accessibilityIdentifier = "activityIndicator"
+        $0.hidesWhenStopped = true
+    }
 
-    private let blurEffectView: UIVisualEffectView = {
-        let blurEffect = UIBlurEffect(style: .light)
-        let blurEffectView = UIVisualEffectView(effect: blurEffect)
-        blurEffectView.translatesAutoresizingMaskIntoConstraints = false
-        blurEffectView.accessibilityIdentifier = "blurEffectView"
-        blurEffectView.alpha = 0
-        return blurEffectView
-    }()
+    private let blurEffectView = UIVisualEffectView(
+        effect: UIBlurEffect(style: .light)
+    ) .. {
+        $0.accessibilityIdentifier = "blurEffectView"
+        $0.alpha = 0
+    }
 
-    private lazy var errorView: ErrorView = {
-        let view = ErrorView(
-            onRetry: { [weak self] in
-                guard let self else { return }
-                viewModel.fetchArticles(viewModel.currentCountry)
-            }
-        )
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.alpha = 0
-        return view
-    }()
+    private lazy var errorView = ErrorView(
+        onRetry: weakify { $0.viewModel.fetchArticles($0.viewModel.currentCountry) }
+    ) .. {
+        $0.alpha = 0
+    }
 
     // MARK: - View Lifecycle
     override func loadView() {
@@ -73,67 +62,48 @@ final class ArticlesListViewController: UIViewController {
     }
 
     private func setupAuxiliarViews() {
-        rootView.addSubview(blurEffectView)
-        rootView.addSubview(activityIndicator)
-        rootView.addSubview(errorView)
-        NSLayoutConstraint.activate([
-            blurEffectView.topAnchor.constraint(equalTo: view.topAnchor),
-            blurEffectView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            blurEffectView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            blurEffectView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            
-            activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            
-            errorView.topAnchor.constraint(equalTo: view.topAnchor),
-            errorView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            errorView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            errorView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        ])
+        [blurEffectView, activityIndicator, errorView].forEach(rootView.addSubview(_:))
+
+        blurEffectView
+            .top(to: view.topAnchor)
+            .leading(to: view.leadingAnchor)
+            .trailing(to: view.trailingAnchor)
+            .bottom(to: view.bottomAnchor)
+
+        activityIndicator
+            .centerX(to: view.centerXAnchor)
+            .centerY(to: view.centerYAnchor)
+
+        errorView
+            .top(to: view.topAnchor)
+            .leading(to: view.leadingAnchor)
+            .trailing(to: view.trailingAnchor)
+            .bottom(to: view.bottomAnchor)
     }
 
     private func setupBindings() {
-        viewModel.$articles
+        viewModel.$state
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
+            .sink { [weak self] state in
                 guard let self else { return }
-                hideError()
-                activityIndicator.stopAnimating()
-                blurEffectView.alpha = 0
-                rootView.articles = viewModel.articles
-            }
-            .store(in: &cancellables)
-        
-        viewModel.$images
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
-                guard let self else { return }
-                rootView.images = viewModel.images
-            }
-            .store(in: &cancellables)
-
-        viewModel.$isLoading
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] isLoading in
-                guard let self else { return }
-                if isLoading {
-                    activityIndicator.startAnimating()
-                    blurEffectView.alpha = 1
-                } else {
+                switch state {
+                case .idle:
+                    hideError()
                     activityIndicator.stopAnimating()
                     blurEffectView.alpha = 0
-                }
-            }
-            .store(in: &cancellables)
-
-        viewModel.$hasError
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] hasError in
-                guard let self else { return }
-                if hasError {
-                    showError()
-                } else {
+                    rootView.articles = []
+                case .loading:
+                    activityIndicator.startAnimating()
+                    blurEffectView.alpha = 1
+                case .loaded(let articles):
                     hideError()
+                    activityIndicator.stopAnimating()
+                    blurEffectView.alpha = 0
+                    rootView.articles = articles
+                case .error:
+                    activityIndicator.stopAnimating()
+                    blurEffectView.alpha = 0
+                    showError()
                 }
             }
             .store(in: &cancellables)
@@ -154,7 +124,7 @@ extension ArticlesListViewController: ArticlesViewDelegate {
         viewModel.fetchArticles(country, isRefreshing)
     }
 
-    func didSelectArticle(_ article: Article, withImage imageView: UIImageView) {
+    func didSelectArticle(_ article: Article, withImage imageView: UIImage) {
         coordinator?.triggerDetails(for: article, with: imageView)
     }
 }

@@ -10,91 +10,76 @@ import UIKit
 final class ArticleDetailsView: UIView {
     // MARK: - Properties
     private let article: Article
-    private let imageView: UIImageView
+    private let image: UIImage
     private let onGoToSitePressed: (URL) -> Void
 
     // MARK: - Subviews
-    private lazy var scrollView: UIScrollView = {
-        let scrollView = UIScrollView()
-        scrollView.showsVerticalScrollIndicator = false
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-        return scrollView
-    }()
+    private lazy var scrollView = UIScrollView() .. {
+        $0.showsVerticalScrollIndicator = false
+        $0.accessibilityIdentifier = "articleDetailsScrollView"
+    }
 
-    private lazy var stackView: UIStackView = {
-        let stack = UIStackView()
-        stack.axis = .vertical
-        stack.spacing = 24
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        return stack
-    }()
+    private lazy var stackView = UIStackView() .. {
+        $0.axis = .vertical
+        $0.spacing = 24
+    }
 
-    private lazy var titleLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 18)
-        label.text = article.title
-        label.numberOfLines = 0
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
+    private lazy var titleLabel = UILabel() .. {
+        $0.font = UIFont.boldSystemFont(ofSize: 18)
+        $0.accessibilityIdentifier = "articleDetailsTitleLabel"
+        $0.text = article.title
+        $0.numberOfLines = 0
+    }
 
-    private lazy var goToSiteButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("Saiba mais", for: .normal)
-        button.backgroundColor = UIColor.systemBlue.withAlphaComponent(0.8)
-        button.setTitleColor(.white, for: .normal)
-        button.layer.cornerRadius = 12
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: #selector(goToSitePressed), for: .touchUpInside)
-        return button
-    }()
+    private lazy var goToSiteButton = UIButton(type: .system) .. {
+        $0.setTitle("Saiba mais", for: .normal)
+        $0.accessibilityIdentifier = "articleDetailsGoToSiteButton"
+        $0.backgroundColor = UIColor.systemBlue.withAlphaComponent(0.8)
+        $0.setTitleColor(.white, for: .normal)
+        $0.layer.cornerRadius = 12
+        $0.addTarget(self, action: #selector(goToSitePressed), for: .touchUpInside)
+    }
 
-    private lazy var contentLabel: CustomLabel = {
-        let label = CustomLabel()
-        label.numberOfLines = 5
-        label.font = UIFont.preferredFont(forTextStyle: .body)
-        label.text = article.content ?? "Artigo sem conteúdo"
+    private lazy var contentLabel = CustomLabel() .. {
+        $0.accessibilityIdentifier = "articleDetailsContentLabel"
+        $0.numberOfLines = 5
+        $0.font = UIFont.preferredFont(forTextStyle: .body)
+        $0.text = article.content ?? "Artigo sem conteúdo"
         if article.content == nil {
-            label.textAlignment = .center
+            $0.textAlignment = .center
         }
-        label.layer.cornerRadius = 12
-        label.layer.masksToBounds = true
-        label.backgroundColor = UIColor.systemGray5
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
+        $0.layer.cornerRadius = 12
+        $0.layer.masksToBounds = true
+        $0.backgroundColor = UIColor.systemGray5
+    }
 
-    private lazy var articleImageView: UIImageView = {
-        let imageView = self.imageView
-        imageView.contentMode = .scaleAspectFill
-        imageView.layer.cornerRadius = 12
-        imageView.clipsToBounds = true
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        return imageView
-    }()
+    private lazy var articleImageView = UIImageView() .. {
+        $0.image = image
+        $0.accessibilityIdentifier = "articleDetailsImageView"
+        $0.contentMode = .scaleAspectFill
+        $0.layer.cornerRadius = 12
+        $0.clipsToBounds = true
+    }
 
-    private lazy var publicationDateLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.preferredFont(forTextStyle: .subheadline)
-        label.textAlignment = .center
-        label.textColor = UIColor.secondaryLabel
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
+    private lazy var publicationDateLabel = UILabel() .. {
+        $0.accessibilityIdentifier = "articleDetailsPublicationDateLabel"
+        $0.font = UIFont.preferredFont(forTextStyle: .subheadline)
+        $0.textAlignment = .center
+        $0.textColor = UIColor.secondaryLabel
+    }
 
     // MARK: - Init
     init(
         article: Article,
-        imageView: UIImageView,
+        image: UIImage,
         onGoToSitePressed: @escaping (URL) -> Void
     ) {
         self.article = article
-        self.imageView = imageView
+        self.image = image
         self.onGoToSitePressed = onGoToSitePressed
         super.init(frame: .zero)
         setupViews()
-        setupConstraints()
-        setupForUITesting()
+        configureConstraints()
         if let dateString = DateFormatter.string(fromISO: article.publishedAt, to: "dd MMM yyyy") {
             publicationDateLabel.text = "Publicado em: \(dateString)"
         }
@@ -111,43 +96,34 @@ final class ArticleDetailsView: UIView {
         addSubview(scrollView)
         scrollView.addSubview(stackView)
 
-        stackView.addArrangedSubview(titleLabel)
-        stackView.addArrangedSubview(articleImageView)
-        stackView.addArrangedSubview(publicationDateLabel)
-        stackView.addArrangedSubview(contentLabel)
+        [titleLabel, articleImageView, publicationDateLabel, contentLabel]
+            .forEach(stackView.addArrangedSubview(_:))
+
         addSubview(goToSiteButton)
     }
-    
-    private func setupForUITesting() {
-        scrollView.accessibilityIdentifier = "articleDetailsScrollView"
-        titleLabel.accessibilityIdentifier = "articleDetailsTitleLabel"
-        goToSiteButton.accessibilityIdentifier = "articleDetailsGoToSiteButton"
-        contentLabel.accessibilityIdentifier = "articleDetailsContentLabel"
-        articleImageView.accessibilityIdentifier = "articleDetailsImageView"
-        publicationDateLabel.accessibilityIdentifier = "articleDetailsPublicationDateLabel"
-    }
 
-    private func setupConstraints() {
-        NSLayoutConstraint.activate([
-            scrollView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 20),
-            scrollView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
-            scrollView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
-            scrollView.bottomAnchor.constraint(equalTo: goToSiteButton.topAnchor, constant: -20),
+    private func configureConstraints() {
+        scrollView
+            .top(to: safeAreaLayoutGuide.topAnchor, constant: 20)
+            .leading(to: leadingAnchor, constant: 20)
+            .trailing(to: trailingAnchor, constant: -20)
+            .bottom(to: goToSiteButton.topAnchor, constant: -20)
 
-            stackView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
-            stackView.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
-            stackView.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
-            stackView.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor),
-            stackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+        stackView
+            .top(to: scrollView.contentLayoutGuide.topAnchor)
+            .leading(to: scrollView.contentLayoutGuide.leadingAnchor)
+            .trailing(to: scrollView.contentLayoutGuide.trailingAnchor)
+            .bottom(to: scrollView.contentLayoutGuide.bottomAnchor)
+            .width(equalTo: scrollView.widthAnchor)
 
-            goToSiteButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
-            goToSiteButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
-            goToSiteButton.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -20),
-            goToSiteButton.heightAnchor.constraint(equalToConstant: 50),
+        goToSiteButton
+            .leading(to: leadingAnchor, constant: 20)
+            .trailing(to: trailingAnchor, constant: -20)
+            .bottom(to: safeAreaLayoutGuide.bottomAnchor, constant: -20)
+            .height(50)
 
-            articleImageView.heightAnchor.constraint(equalToConstant: 200),
-            contentLabel.heightAnchor.constraint(greaterThanOrEqualToConstant: 100)
-        ])
+        articleImageView.height(200)
+        contentLabel.height(greaterThanOrEqualTo: 100)
     }
 
     // MARK: - Actions

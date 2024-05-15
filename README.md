@@ -50,13 +50,45 @@ O aplicativo utiliza a [NewsAPI](https://newsapi.org) para buscar notícias em t
   - `country`: O código do país para filtrar as notícias (por exemplo, "br" para Brasil).
   - `apiKey`: A chave de API para autenticação.
 
-## Funcionalidades
+# Funcionalidades
 
-### Tela Principal
+<details>
+<summary>Video Demonstrativo</summary>
+<br>
+<div align="center">
+  <a href="https://github.com/yagoal/ArticleWave/assets/85469576/78f49c3e-3cf0-41c2-9c71-f6f700067602">
+    <video src="https://github.com/yagoal/ArticleWave/assets/85469576/78f49c3e-3cf0-41c2-9c71-f6f700067602" alt="Video Demonstrativo" />
+  </a>
+</div>
+
+</details>
+
+## Tela Principal
 Na tela principal, os usuários podem selecionar diferentes bandeiras para buscar as últimas notícias de cada país. Os artigos são exibidos em uma lista, mostrando imagens, autores, títulos e descrições. A interface foi projetada para ser clara e intuitiva, permitindo que os usuários naveguem facilmente entre as notícias.
 
-### Tela de Detalhes
+<details>
+<summary>Imagens da Tela Principal</summary>
+<br>
+<p float="left">
+  <img src="https://github.com/yagoal/ArticleWave/assets/85469576/47f58ef3-2ba3-4560-bec3-80403d884f6e" width="30%" />
+  <img src="https://github.com/yagoal/ArticleWave/assets/85469576/ecaa4a59-193a-4fcb-88d8-fd39d635ef6d" width="30%" />
+</p>
+
+</details>
+
+## Tela de Detalhes
 Ao selecionar um artigo na tela principal, os usuários são levados para a tela de detalhes, onde podem ver uma imagem maior, a data de publicação e o conteúdo completo do artigo. Além disso, há um botão "Saiba Mais" que leva os usuários ao link original do artigo, permitindo acesso a informações adicionais sem sobrecarregar a interface do aplicativo.
+
+<details>
+<summary>Imagens da Tela de Detalhes</summary>
+<br>
+<p float="left">
+  <img src="https://github.com/yagoal/ArticleWave/assets/85469576/f3cd8ad6-fd03-4c51-affe-e66655afa816" width="30%" />
+  <img src="https://github.com/yagoal/ArticleWave/assets/85469576/037939b4-2c14-4ae4-a83a-c3d66463c8e2" width="30%" />
+</p>
+
+</details>
+
 
 ## Testes
 

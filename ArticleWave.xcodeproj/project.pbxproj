@@ -39,7 +39,6 @@
 		2056D6DB2BEFFC0600F58581 /* APIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2056D6DA2BEFFC0600F58581 /* APIError.swift */; };
 		2056D6E42BF10B3700F58581 /* ArticleDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2056D6E32BF10B3700F58581 /* ArticleDetailsView.swift */; };
 		2056D6E62BF10B5200F58581 /* ArticleDetailsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2056D6E52BF10B5200F58581 /* ArticleDetailsController.swift */; };
-		2056D6EA2BF14A8000F58581 /* DateFormatter+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2056D6E92BF14A8000F58581 /* DateFormatter+Extension.swift */; };
 		2056D6EC2BF14D6500F58581 /* ArticlesListHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2056D6EB2BF14D6500F58581 /* ArticlesListHeaderView.swift */; };
 		2056DA272BF241B000F58581 /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2056DA262BF241B000F58581 /* ErrorView.swift */; };
 /* End PBXBuildFile section */
@@ -98,7 +97,6 @@
 		2056D6DA2BEFFC0600F58581 /* APIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIError.swift; sourceTree = "<group>"; };
 		2056D6E32BF10B3700F58581 /* ArticleDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleDetailsView.swift; sourceTree = "<group>"; };
 		2056D6E52BF10B5200F58581 /* ArticleDetailsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleDetailsController.swift; sourceTree = "<group>"; };
-		2056D6E92BF14A8000F58581 /* DateFormatter+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFormatter+Extension.swift"; sourceTree = "<group>"; };
 		2056D6EB2BF14D6500F58581 /* ArticlesListHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticlesListHeaderView.swift; sourceTree = "<group>"; };
 		2056DA262BF241B000F58581 /* ErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -316,7 +314,6 @@
 			isa = PBXGroup;
 			children = (
 				201A5AD12BF29B7A0012F152 /* LaunchArgument.swift */,
-				2056D6E92BF14A8000F58581 /* DateFormatter+Extension.swift */,
 				201A5AE92BF400DE0012F152 /* UIView+Constraints.swift */,
 				201A5AED2BF422940012F152 /* Weakable.swift */,
 				201A5AEF2BF4264F0012F152 /* CascadeOperator.swift */,
@@ -489,7 +486,6 @@
 				201A5AEA2BF400DE0012F152 /* UIView+Constraints.swift in Sources */,
 				2056D6E62BF10B5200F58581 /* ArticleDetailsController.swift in Sources */,
 				2056D6952BEFCF9600F58581 /* ArticleWaveApp.swift in Sources */,
-				2056D6EA2BF14A8000F58581 /* DateFormatter+Extension.swift in Sources */,
 				201A5AE62BF312BA0012F152 /* CountryOptions.swift in Sources */,
 				2056D6D92BEFF91B00F58581 /* ArticleListViewModel.swift in Sources */,
 				2056D6E42BF10B3700F58581 /* ArticleDetailsView.swift in Sources */,

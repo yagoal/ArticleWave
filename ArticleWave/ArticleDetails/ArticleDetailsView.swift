@@ -78,10 +78,7 @@ final class ArticleDetailsView: UIView {
         setupViews()
         setupImage()
         configureConstraints()
-        if let date = ISO8601DateFormatter().date(from: article.publishedAt) {
-            let dateString = date.formatted(.dateTime.day().month(.abbreviated).year())
-            publicationDateLabel.text = "Publicado em: \(dateString)"
-        }
+        setupDate()
     }
 
     required init?(coder: NSCoder) {
@@ -105,6 +102,19 @@ final class ArticleDetailsView: UIView {
             if let cachedImage = ImageFetcher.shared.imageCache.object(forKey: url as NSURL) {
                 articleImageView.image = cachedImage
             }
+        }
+    }
+
+    private func setupDate() {
+        let isoFormatter = ISO8601DateFormatter()
+        if let date = isoFormatter.date(from: article.publishedAt) {
+            let dateFormatter = DateFormatter()
+            dateFormatter.locale = Locale(identifier: "pt_BR")
+            dateFormatter.dateStyle = .long
+            dateFormatter.timeStyle = .none
+
+            let dateString = dateFormatter.string(from: date)
+            publicationDateLabel.text = "Publicado em: \(dateString)"
         }
     }
 

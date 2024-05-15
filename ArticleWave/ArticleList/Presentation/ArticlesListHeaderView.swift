@@ -26,7 +26,7 @@ final class ArticlesHeaderView: UIView {
         $0.spacing = 10
     }
 
-    // MARK: - Initialization
+    // MARK: - Init
     init(didSelectCountry: @escaping (_ country: String) -> Void) {
         self.didSelectCountry = didSelectCountry
         super.init(frame: .zero)

@@ -33,12 +33,6 @@ final class ArticlesListViewModelTests: XCTestCase {
         let expectation = self.expectation(description: "Expect to fetch articles successfully")
         let expectedTitle = "Test Article"
         let expectedImageUrlString = "http://example.com/image.png"
-        guard let expectedImageUrl = URL(string: expectedImageUrlString) else {
-            XCTFail("URL could not be initialized.")
-            return
-        }
-
-        let expectedImage = UIImage()
         let expectedArticles = [Article.stub(title: expectedTitle, urlToImage: expectedImageUrlString)]
         let response = ArticlesResponseFactory.makeResponse(articles: expectedArticles)
 

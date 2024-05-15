@@ -86,7 +86,6 @@ final class ArticlesListView: UIView {
 }
 
 // MARK: - TableView DataSource & Delegate
-// MARK: - TableView DataSource & Delegate
 extension ArticlesListView: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: ArticleListTableViewCell.identifier, for: indexPath) as? ArticleListTableViewCell else {

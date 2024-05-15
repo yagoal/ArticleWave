@@ -119,6 +119,7 @@ final class ArticlesListViewController: UIViewController {
     }
 }
 
+// MARK: - ArticlesViewDelegate
 extension ArticlesListViewController: ArticlesViewDelegate {
     func didSelectCountry(_ country: String,_ isRefreshing: Bool) {
         viewModel.fetchArticles(country, isRefreshing)

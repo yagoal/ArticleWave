@@ -10,23 +10,19 @@ import UIKit
 final class ArticleDetailsViewController: UIViewController {
     // MARK: - Properties
     private let article: Article
-    private let image: UIImage
-
     var coordinator: AppCoordinator?
 
     // MARK: - Lifecycle
     override func loadView() {
         view = ArticleDetailsView(
             article: article,
-            image: image,
             onGoToSitePressed: weakify { $0.coordinator?.triggerOpenURL(for: $1) }
         )
     }
 
     // MARK: - Init
-    init(article: Article, image: UIImage) {
+    init(article: Article) {
         self.article = article
-        self.image = image
         super.init(nibName: nil, bundle: nil)
     }
 

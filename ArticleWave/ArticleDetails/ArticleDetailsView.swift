@@ -10,7 +10,6 @@ import UIKit
 final class ArticleDetailsView: UIView {
     // MARK: - Properties
     private let article: Article
-    private let image: UIImage
     private let onGoToSitePressed: (URL) -> Void
 
     // MARK: - Subviews
@@ -54,7 +53,7 @@ final class ArticleDetailsView: UIView {
     }
 
     private lazy var articleImageView = UIImageView() .. {
-        $0.image = image
+        $0.image = .imageNotFound
         $0.accessibilityIdentifier = "articleDetailsImageView"
         $0.contentMode = .scaleAspectFill
         $0.layer.cornerRadius = 12
@@ -71,19 +70,18 @@ final class ArticleDetailsView: UIView {
     // MARK: - Init
     init(
         article: Article,
-        image: UIImage,
         onGoToSitePressed: @escaping (URL) -> Void
     ) {
         self.article = article
-        self.image = image
         self.onGoToSitePressed = onGoToSitePressed
         super.init(frame: .zero)
         setupViews()
+        setupImage()
         configureConstraints()
-        if let dateString = DateFormatter.string(fromISO: article.publishedAt, to: "dd MMM yyyy") {
+        if let date = ISO8601DateFormatter().date(from: article.publishedAt) {
+            let dateString = date.formatted(.dateTime.day().month(.abbreviated).year())
             publicationDateLabel.text = "Publicado em: \(dateString)"
         }
-
     }
 
     required init?(coder: NSCoder) {
@@ -100,6 +98,14 @@ final class ArticleDetailsView: UIView {
             .forEach(stackView.addArrangedSubview(_:))
 
         addSubview(goToSiteButton)
+    }
+
+    private func setupImage() {
+        if let urlString = article.urlToImage, let url = URL(string: urlString) {
+            if let cachedImage = ImageFetcher.shared.imageCache.object(forKey: url as NSURL) {
+                articleImageView.image = cachedImage
+            }
+        }
     }
 
     private func configureConstraints() {

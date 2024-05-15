@@ -14,8 +14,10 @@ final class ArticleListTableViewCell: UITableViewCell {
     private var article: Article?
 
     // MARK: - Subviews
-    private lazy var articleImage = UIImageView.defaultImageView .. {
+    private lazy var articleImage = UIImageView() .. {
+        $0.image = .imageNotFound
         $0.clipsToBounds = true
+        $0.contentMode = .scaleAspectFill
         $0.layer.cornerRadius = 40
         $0.layer.borderColor = UIColor.systemGray.cgColor
         $0.layer.borderWidth = 2
@@ -95,15 +97,12 @@ final class ArticleListTableViewCell: UITableViewCell {
 
     private func configureImage(with urlString: String?) {
         guard let urlString = urlString, let url = URL(string: urlString) else {
-            articleImage.image = UIImage(named: "imageNotFound")
+            articleImage.image = .imageNotFound
             return
         }
 
         articleImage.image = nil
         loadingIndicator.startAnimating()
-        articleImage.addSubview(loadingIndicator)
-        loadingIndicator.centerX(to: articleImage.centerXAnchor)
-        loadingIndicator.centerY(to: articleImage.centerYAnchor)
 
         ImageFetcher.shared.fetch(url: url) { result in
             DispatchQueue.main.async { [weak self] in
@@ -113,7 +112,7 @@ final class ArticleListTableViewCell: UITableViewCell {
                 case .success(let image):
                     articleImage.image = image
                 case .failure:
-                    articleImage.image = UIImage(named: "imageNotFound")
+                    articleImage.image = .imageNotFound
                 }
             }
         }
@@ -128,6 +127,7 @@ final class ArticleListTableViewCell: UITableViewCell {
 
     // MARK: - View Setup
     private func setupViews() {
+        articleImage.addSubview(loadingIndicator)
         contentView.addSubview(contentStackView)
     }
 
@@ -137,6 +137,8 @@ final class ArticleListTableViewCell: UITableViewCell {
         setupChevronImageViewConstraints()
         setupIconViewConstraints()
         setupLabelsConstraints()
+        loadingIndicator.centerX(to: articleImage.centerXAnchor)
+        loadingIndicator.centerY(to: articleImage.centerYAnchor)
     }
 
     private func setupContentStackViewConstraints() {

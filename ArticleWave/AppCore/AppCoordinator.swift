@@ -21,11 +21,8 @@ final class AppCoordinator {
         rootViewController.pushViewController(articlesListViewController, animated: false)
     }
 
-    func triggerDetails(for article: Article, with imageView: UIImage) {
-        let articleDetailsViewController = ArticleDetailsViewController(
-            article: article,
-            image: imageView
-        )
+    func triggerDetails(for article: Article) {
+        let articleDetailsViewController = ArticleDetailsViewController(article: article)
         articleDetailsViewController.coordinator = self
         rootViewController.pushViewController(articleDetailsViewController, animated: true)
     }

@@ -22,7 +22,7 @@ final class ArticleListUITests: XCTestCase {
     }
 
     // MARK: - First Test
-    func test01_ArticleListLoadingBehavior() throws {
+    func test01_articleListLoadingBehavior() throws {
         app.setLaunchArgument([.uiTest, .useMockHttpRequestWithDelay])
         app.launch()
 
@@ -32,7 +32,6 @@ final class ArticleListUITests: XCTestCase {
 
     private func waitForLoadingToFinish() {
         let activityIndicator = app.activityIndicators["activityIndicator"]
-        let blurEffectView = app.otherElements["blurEffectView"]
 
         // Wait for the activity indicator to no longer be hittable, indicating that loading has finished
         expectation(
@@ -42,11 +41,6 @@ final class ArticleListUITests: XCTestCase {
         )
 
         waitForExpectations(timeout: 5)
-    
-        XCTAssertFalse(
-            blurEffectView.isHittable,
-            "The blur effect view should not be hittable after loading."
-        )
 
         XCTAssertFalse(
             activityIndicator.isHittable,
@@ -65,7 +59,7 @@ final class ArticleListUITests: XCTestCase {
     }
 
     // MARK: - Second Test
-    func test02_HeaderCountrySelection() {
+    func test02_headerCountrySelection() {
         app.setLaunchArgument([.uiTest])
         app.launch()
         checkTitleVisibility()

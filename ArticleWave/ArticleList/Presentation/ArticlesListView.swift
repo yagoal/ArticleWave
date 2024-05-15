@@ -8,7 +8,7 @@
 import UIKit
 
 protocol ArticlesViewDelegate: AnyObject {
-    func didSelectArticle(_ article: Article, withImage imageView: UIImage)
+    func didSelectArticle(_ article: Article)
     func didSelectCountry(_ country: String, _ isRefreshing: Bool)
 }
 
@@ -16,7 +16,6 @@ final class ArticlesListView: UIView {
     // MARK: - Delegate
     weak var delegate: ArticlesViewDelegate?
     private var selectedCountry: String?
-
     // MARK: - Subviews
     private lazy var headerView = ArticlesHeaderView(
         didSelectCountry: weakify {
@@ -71,11 +70,23 @@ final class ArticlesListView: UIView {
             .bottom(to: bottomAnchor)
     }
 
+    private func scrollToTop() {
+        let firstIndexPath = IndexPath(row: 0, section: 0)
+        articlesTableView.scrollToRow(at: firstIndexPath, at: .top, animated: true)
+    }
 
     // MARK: - Public Methods
     func reloadData() {
         articlesTableView.reloadData()
         refreshControl.endRefreshing()
+        if !articles.isEmpty {
+            scrollToTop()
+        }
+    }
+    
+    func setVisibleContent(isHidden: Bool) {
+        headerView.isHidden = isHidden
+        articlesTableView.isHidden = isHidden
     }
 
     // MARK: - Actions
@@ -103,13 +114,6 @@ extension ArticlesListView: UITableViewDataSource, UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         let article = articles[indexPath.row]
 
-        var image = UIImage(named: "imageNotFound")
-        if let urlString = article.urlToImage, let url = URL(string: urlString) {
-            if let cachedImage = ImageFetcher.shared.imageCache.object(forKey: url as NSURL) {
-                image = cachedImage
-            }
-        }
-
-        delegate?.didSelectArticle(article, withImage: image ?? UIImage())
+        delegate?.didSelectArticle(article)
     }
 }

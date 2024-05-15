@@ -45,18 +45,20 @@ final class ArticlesHeaderView: UIView {
         addSubview(titleLabel)
         addSubview(buttonStackView)
 
-        for country in CountryOptions.allCases {
-            let button = UIButton(type: .system) .. {
-                $0.titleLabel?.font = UIFont.systemFont(ofSize: 30)
-                $0.setTitle(country.emoji, for: .normal)
-                $0.accessibilityIdentifier = "countryButton_\(country.rawValue)"
-                $0.addTarget(self, action: #selector(countryButtonPressed(_:)), for: .touchUpInside)
-                $0.layer.cornerRadius = 20
-                $0.layer.masksToBounds = true
-                $0.backgroundColor = .systemBlue.withAlphaComponent(0.8)
-            }
+        CountryOptions.allCases
+            .map(makeCountryButtons)
+            .forEach(buttonStackView.addArrangedSubview(_:))
+    }
 
-            buttonStackView.addArrangedSubview(button)
+    private func makeCountryButtons(country: CountryOptions) -> UIButton {
+        UIButton(type: .system) .. {
+            $0.titleLabel?.font = UIFont.systemFont(ofSize: 30)
+            $0.setTitle(country.emoji, for: .normal)
+            $0.accessibilityIdentifier = "countryButton_\(country.rawValue)"
+            $0.addTarget(self, action: #selector(countryButtonPressed(_:)), for: .touchUpInside)
+            $0.layer.cornerRadius = 20
+            $0.layer.masksToBounds = true
+            $0.backgroundColor = .systemBlue.withAlphaComponent(0.8)
         }
     }
 

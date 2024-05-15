@@ -42,7 +42,7 @@ struct ArticlesResponseFactory {
         code: String? = nil,
         message: String? = nil
     ) -> ArticlesResponse {
-        return ArticlesResponse(
+        ArticlesResponse(
             status: status,
             totalResults: totalResults,
             articles: articles,

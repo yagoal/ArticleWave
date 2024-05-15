@@ -23,13 +23,6 @@ final class ArticlesListViewController: UIViewController {
         $0.hidesWhenStopped = true
     }
 
-    private let blurEffectView = UIVisualEffectView(
-        effect: UIBlurEffect(style: .light)
-    ) .. {
-        $0.accessibilityIdentifier = "blurEffectView"
-        $0.alpha = 0
-    }
-
     private lazy var errorView = ErrorView(
         onRetry: weakify { $0.viewModel.fetchArticles($0.viewModel.currentCountry) }
     ) .. {
@@ -62,13 +55,7 @@ final class ArticlesListViewController: UIViewController {
     }
 
     private func setupAuxiliarViews() {
-        [blurEffectView, activityIndicator, errorView].forEach(rootView.addSubview(_:))
-
-        blurEffectView
-            .top(to: view.topAnchor)
-            .leading(to: view.leadingAnchor)
-            .trailing(to: view.trailingAnchor)
-            .bottom(to: view.bottomAnchor)
+        [activityIndicator, errorView].forEach(rootView.addSubview(_:))
 
         activityIndicator
             .centerX(to: view.centerXAnchor)
@@ -85,28 +72,39 @@ final class ArticlesListViewController: UIViewController {
         viewModel.$state
             .receive(on: DispatchQueue.main)
             .sink { [weak self] state in
-                guard let self else { return }
-                switch state {
-                case .idle:
-                    hideError()
-                    activityIndicator.stopAnimating()
-                    blurEffectView.alpha = 0
-                    rootView.articles = []
-                case .loading:
-                    activityIndicator.startAnimating()
-                    blurEffectView.alpha = 1
-                case .loaded(let articles):
-                    hideError()
-                    activityIndicator.stopAnimating()
-                    blurEffectView.alpha = 0
-                    rootView.articles = articles
-                case .error:
-                    activityIndicator.stopAnimating()
-                    blurEffectView.alpha = 0
-                    showError()
-                }
+                self?.sinkState(state)
             }
             .store(in: &cancellables)
+    }
+
+    private func sinkState(_ state: ArticlesListState) {
+        switch state {
+        case .idle:
+            hideError()
+            hideLoading()
+            rootView.articles = []
+        case .loading:
+            showLoading()
+        case .loaded(let articles):
+            hideError()
+            hideLoading()
+            rootView.articles = articles
+        case .error:
+            hideLoading()
+            showError()
+        }
+    }
+
+    // MARK: Loading Behavior
+    private func showLoading() {
+        hideError()
+        rootView.setVisibleContent(isHidden: true)
+        activityIndicator.startAnimating()
+    }
+
+    private func hideLoading() {
+        rootView.setVisibleContent(isHidden: false)
+        activityIndicator.stopAnimating()
     }
 
     // MARK: - Error Handling
@@ -125,7 +123,7 @@ extension ArticlesListViewController: ArticlesViewDelegate {
         viewModel.fetchArticles(country, isRefreshing)
     }
 
-    func didSelectArticle(_ article: Article, withImage imageView: UIImage) {
-        coordinator?.triggerDetails(for: article, with: imageView)
+    func didSelectArticle(_ article: Article) {
+        coordinator?.triggerDetails(for: article)
     }
 }

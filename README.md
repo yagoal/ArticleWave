@@ -53,17 +53,12 @@ O aplicativo utiliza a [NewsAPI](https://newsapi.org) para buscar notícias em t
 # Funcionalidades
 
 
-
-
-
-
-
 <details>
 <summary>Video Demonstrativo</summary>
 <br>
 <div align="center">
-  <a href="https://github.com/yagoal/ArticleWave/assets/85469576/e36905b9-d506-41b4-8d95-56f592c264e4">
-    <video src="https://github.com/yagoal/ArticleWave/assets/85469576/e36905b9-d506-41b4-8d95-56f592c264e4" alt="Video Demonstrativo" />
+  <a href="https://github.com/yagoal/ArticleWave/assets/85469576/067e2f79-373e-426e-a360-10608c3bdb0a">
+    <video src="https://github.com/yagoal/ArticleWave/assets/85469576/067e2f79-373e-426e-a360-10608c3bdb0a" alt="Video Demonstrativo" />
   </a>
 </div>
 
